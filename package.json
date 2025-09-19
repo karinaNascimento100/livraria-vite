@@ -23,7 +23,10 @@
   "homepage": "https://github.com/karinaNascimento100/livraria-vite#readme",
   "dependencies": {
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.1",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^4.1.0",

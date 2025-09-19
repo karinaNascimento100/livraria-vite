@@ -1,0 +1,16 @@
+#header {
+  background: #222 !important;
+  color: #fff !important;
+}
+#header .top, #header .bottom {
+  background: transparent !important;
+}
+#logo h1, #logo p {
+  color: #fff !important;
+}
+#nav ul li a {
+  color: #fff !important;
+}
+#header .icons .icon {
+  color: #fff !important;
+}
