@@ -14,3 +14,61 @@
 #header .icons .icon {
   color: #fff !important;
 }
+
+/* ===== Flexbox enhancements (non-intrusive) ===== */
+/* Utilities */
+.flex { display: flex !important; }
+.flex-col { display: flex !important; flex-direction: column !important; }
+.flex-center { display: flex !important; align-items: center !important; justify-content: center !important; }
+.flex-between { display: flex !important; align-items: center !important; justify-content: space-between !important; }
+.wrap { flex-wrap: wrap !important; }
+.gap-1 { gap: 0.5rem !important; }
+.gap-2 { gap: 1rem !important; }
+.gap-3 { gap: 1.5rem !important; }
+
+/* Header nav as flex row */
+#nav ul {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Product grid using flex; overrides grid classes without touching markup */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem; /* space between cards */
+}
+
+.col-4 {
+  /* three columns on desktop */
+  flex: 1 1 calc(33.333% - 2rem);
+  max-width: calc(33.333% - 2rem);
+}
+
+/* Mobile stacking */
+@media (max-width: 768px) {
+  .col-4,
+  .col-12-mobile {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* Product item card tweaks for better flex behavior */
+.item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.item header { margin-top: 0.75rem; }
+.item .button { align-self: flex-start; }
+
+/* Section containers with vertical rhythm */
+#main > section .container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
