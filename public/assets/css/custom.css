@@ -1,30 +1,125 @@
+/* Completely neutralize the original sidebar (#header) */
 #header {
-  background: #222 !important;
-  color: #fff !important;
+  display: none !important;
 }
-#header .top, #header .bottom {
-  background: transparent !important;
+
+/* New top header layout (independent from template) */
+.site-header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #0f0f0f; /* slate-800 */
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(12, 12, 12, 0.15);
 }
-#logo h1, #logo p {
-  color: #fff !important;
+.topbar {
+  background: #0f0f0f; /* slightly darker */
 }
-#nav ul li a {
-  color: #fff !important;
+.topbar__list {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.15rem 0.75rem;
+  max-width: 1080px;
+  margin-inline: auto;
+  flex-wrap: wrap;
 }
-#header .icons .icon {
+.topbar__link {
+  color: #e5e7eb; /* gray-200 */
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.topbar__link:hover { text-decoration: underline; }
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.mainbar { border-top: 1px solid rgba(255,255,255,0.08); }
+.search {
+  flex: 1 1 40%;
+  display: flex;
+  justify-content: center;
+}
+.search input[type='search']{
+  width: 100%;
+  max-width: 420px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+@media (max-width: 640px){
+  .site-header__inner{ flex-wrap: wrap; }
+  .search{ order: 3; width: 100%; }
+  .nav__list{ width: 100%; justify-content: center; }
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.brand__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+}
+.brand__title {
+  font-weight: 600;
+}
+.nav__list {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+}
+.nav__link {
   color: #fff !important;
+  text-decoration: none;
+}
+.nav__link:hover,
+.nav__link[aria-current='page'] {
+  text-decoration: underline;
 }
 
 /* ===== Flexbox enhancements (non-intrusive) ===== */
 /* Utilities */
-.flex { display: flex !important; }
-.flex-col { display: flex !important; flex-direction: column !important; }
-.flex-center { display: flex !important; align-items: center !important; justify-content: center !important; }
-.flex-between { display: flex !important; align-items: center !important; justify-content: space-between !important; }
-.wrap { flex-wrap: wrap !important; }
-.gap-1 { gap: 0.5rem !important; }
-.gap-2 { gap: 1rem !important; }
-.gap-3 { gap: 1.5rem !important; }
+.flex {
+  display: flex !important;
+}
+.flex-col {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.flex-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.flex-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.wrap {
+  flex-wrap: wrap !important;
+}
+.gap-1 {
+  gap: 0.5rem !important;
+}
+.gap-2 {
+  gap: 1rem !important;
+}
+.gap-3 {
+  gap: 1.5rem !important;
+}
 
 /* Header nav as flex row */
 #nav ul {
@@ -42,14 +137,30 @@
   gap: 2rem; /* space between cards */
 }
 
+/* Five columns on desktop */
+.col-1-5 {
+  flex: 1 1 calc(20% - 2rem);
+  max-width: calc(20% - 2rem);
+}
+
+/* Optional legacy three-column helper (kept for compatibility) */
 .col-4 {
-  /* three columns on desktop */
   flex: 1 1 calc(33.333% - 2rem);
   max-width: calc(33.333% - 2rem);
 }
 
 /* Mobile stacking */
+/* Tablet: 3 columns */
+@media (max-width: 1024px) {
+  .col-1-5 { flex: 1 1 calc(33.333% - 2rem); max-width: calc(33.333% - 2rem); }
+}
+/* Phablet: 2 columns */
+@media (max-width: 900px) {
+  .col-1-5 { flex: 1 1 calc(50% - 2rem); max-width: calc(50% - 2rem); }
+}
+/* Mobile: stack */
 @media (max-width: 768px) {
+  .col-1-5,
   .col-4,
   .col-12-mobile {
     flex: 1 1 100%;
@@ -63,12 +174,72 @@
   flex-direction: column;
   height: 100%;
 }
-.item header { margin-top: 0.75rem; }
-.item .button { align-self: flex-start; }
+.item header {
+  margin-top: 0.75rem;
+}
+.item .button {
+  align-self: flex-start;
+}
+.item .button + .button {
+  margin-left: 0.5rem;
+}
+
+/* Gallery image presentation */
+.item .image.fit {
+  background: #111; /* dark background to avoid "caixa sólida" look */
+  border-radius: 8px;
+  overflow: hidden;
+}
+.item .image.fit img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2/3; /* portrait cover shape */
+  object-fit: cover;
+}
 
 /* Section containers with vertical rhythm */
 #main > section .container {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+}
+
+/* Ensure main content isn't hidden under sticky header */
+#main {
+  padding-top: 56px; /* header height spacing */
+}
+
+/* Kill template grid offsets that cause right empty gap */
+.row > *[class*='-offset-'] { margin-left: 0 !important; }
+
+/* Ensure body/content fills full width under our layout */
+body, #main, #footer { margin-left: 0 !important; }
+#main { width: 100% !important; }
+
+/* Tighter hero spacing under our top header */
+#main > section.cover { padding: 1rem 0 !important; }
+#main > section.one { padding-top: 0.5rem !important; }
+
+/* Reduce heading margins inside hero for compact look */
+#main > section.cover h1,
+#main > section.cover h2 {
+  margin: 0.25em 0 0.5em !important;
+}
+
+/* Payments logos grid */
+.payments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.payments img {
+  max-height: 40px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+  filter: saturate(0.9);
 }

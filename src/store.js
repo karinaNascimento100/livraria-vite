@@ -1,4 +1,4 @@
-import { createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 
 const initialState = {
   cart: [],
@@ -7,11 +7,11 @@ const initialState = {
 function cartReducer(state = initialState, action) {
   switch (action.type) {
     case 'ADD_TO_CART': {
-      const exists = state.cart.find((i) => i.id === action.payload.id)
+      const exists = state.cart.find(i => i.id === action.payload.id)
       if (exists) {
         return {
           ...state,
-          cart: state.cart.map((i) =>
+          cart: state.cart.map(i =>
             i.id === action.payload.id ? { ...i, qty: (i.qty || 1) + 1 } : i
           ),
         }
@@ -20,15 +20,15 @@ function cartReducer(state = initialState, action) {
     }
     case 'REMOVE_FROM_CART': {
       const id = action.payload.id ?? action.payload
-      return { ...state, cart: state.cart.filter((item) => item.id !== id) }
+      return { ...state, cart: state.cart.filter(item => item.id !== id) }
     }
     case 'DECREMENT_QTY': {
       const id = action.payload.id ?? action.payload
       return {
         ...state,
         cart: state.cart
-          .map((i) => (i.id === id ? { ...i, qty: (i.qty || 1) - 1 } : i))
-          .filter((i) => (i.qty || 1) > 0),
+          .map(i => (i.id === id ? { ...i, qty: (i.qty || 1) - 1 } : i))
+          .filter(i => (i.qty || 1) > 0),
       }
     }
     default:
@@ -36,5 +36,7 @@ function cartReducer(state = initialState, action) {
   }
 }
 
-const store = createStore(cartReducer)
+const store = configureStore({
+  reducer: cartReducer,
+})
 export default store
