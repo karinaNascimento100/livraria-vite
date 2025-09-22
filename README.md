@@ -1,141 +1,109 @@
-# livraria-vite
+## Livraria Vite — Parada Obrigatória 1
 
-## Explicação técnica — Migração CRA → Vite
+Aplicação web simples de livraria feita com Vite + React. Catálogo com 10 livros (capas), botão “Comprar” que adiciona ao carrinho (Redux), lista de formas de pagamento e seção de contato.
 
-Esta nota explica por que e como migrar de Create React App (CRA) para Vite, com foco prático para quem usa VS Code em Windows.
+### 👀 Visão geral
 
-### 1) Contexto
+- Build e dev server com Vite
+- React Router (rotas: /, /products, /cart, /conta)
+- Redux para carrinho (adicionar, decrementar, remover)
+- Testes com Vitest + Testing Library
+- ESLint (flat) e Prettier
 
-- CRA (Create React App): usa react-scripts → Webpack + Babel.
-- Vite: usa esbuild (dev) e Rollup (build). Muito mais rápido.
-- Problemas comuns no CRA: build lento, HMR instável, configuração engessada.
-- Vantagens do Vite: startup quase instantânea, HMR sólido, configuração clara via `vite.config.js`.
+### 🚀 Como rodar
 
-### 2) Estrutura de pastas esperada
+1) Instale as dependências
 
-CRA
-
-- /public
-  - index.html
-- /src
-  - index.js(x)
-  - App.js(x)
-- package.json (usa react-scripts)
-
-Vite
-
-- /public
-  - index.html ← diferente, o Vite injeta o script
-- /src
-  - main.jsx ← entrypoint padrão
-  - App.jsx
-- vite.config.js
-- package.json (scripts: dev/build/preview)
-
-### 3) Scripts no package.json
-
-CRA
-
-```
-"scripts": {
-  "start": "react-scripts start",
-  "build": "react-scripts build",
-  "test": "react-scripts test"
-}
+```powershell
+npm install
 ```
 
-Vite
+2) Ambiente de desenvolvimento
 
-```
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
-}
+```powershell
+npm run dev
+# abre http://localhost:5173
 ```
 
-### 4) Variáveis de ambiente
+3) Build de produção
 
-- CRA → `process.env.REACT_APP_API_URL`
-- Vite → `import.meta.env.VITE_API_URL`
-
-Ação: renomear no `.env` (prefixo `REACT_APP_` → `VITE_`) e atualizar as referências no código.
-
-### 5) HTML base
-
-CRA (`public/index.html`)
-
-```
-<div id="root"></div>
+```powershell
+npm run build
+# saída em /dist
 ```
 
-CRA injeta o JS automaticamente.
+4) Pré-visualização do build
 
-Vite (`public/index.html`)
-
-```
-<div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+```powershell
+npm run preview
 ```
 
-No Vite, o script de entrada é declarado no HTML.
+### 🧩 Scripts úteis
 
-### 6) Entrypoint
+- `npm run dev` — inicia o servidor de desenvolvimento
+- `npm run build` — gera build de produção
+- `npm run preview` — serve o build localmente
+- `npm test` — executa os testes (Vitest)
+- `npm run test:watch` — testes em modo watch
+- `npm run lint` — verifica lint (ESLint)
+- `npm run lint:fix` — corrige lint automaticamente
+- `npm run format` — checa formatação (Prettier)
+- `npm run format:write` — formata arquivos com Prettier
 
-CRA (`src/index.jsx`)
+### 🗂️ Estrutura principal
 
-```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-
-const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(<App />)
+```
+public/
+  assets/css/custom.css   # estilos atuais (base, header, catálogo, pagamentos, contato)
+src/
+  App.jsx                 # layout, seções e rotas
+  main.jsx                # bootstrap React
+  store.js                # Redux store + reducers do carrinho
+  components/
+    Header.jsx            # topo (links, busca, carrinho)
+    ProductList.jsx       # catálogo (10 itens padrão, preço + botão)
+    Cart.jsx              # carrinho (lista, decremento e remoção)
 ```
 
-Vite (`src/main.jsx`) — idêntico; muda apenas o nome do arquivo.
+### 🧭 Rotas e seções
 
-### 7) Testes
+- Home/Catálogo: `/` ou `/products` → renderiza `ProductList`
+- Carrinho: `/cart` → renderiza `Cart`
+- Minha Conta (exemplo): `/conta`
+- Formas de Pagamento e Contato: seções na mesma página principal
 
-- CRA → Jest vem pronto.
-- Vite → usar Vitest + Testing Library.
+### 🛒 Catálogo e preços
 
-### 8) Passo a passo da migração
+- O catálogo padrão (10 itens) está em `src/components/ProductList.jsx` na constante `defaultProducts`.
+- Cada item tem `id`, `image` e `price`.
+- O preço é exibido abaixo da imagem e formatado em BRL.
+- O botão “Comprar” adiciona o item ao carrinho.
 
-1. Criar projeto Vite:
-   ```powershell
-   npm create vite@latest minha-app -- --template react
-   cd minha-app
-   npm install
-   ```
-2. Copiar `src/` e `public/` do CRA para o novo projeto (ajustando colisões conforme necessário).
-3. Ajustar `public/index.html` do Vite para incluir o script:
-   ```html
-   <script type="module" src="/src/main.jsx"></script>
-   ```
-4. Renomear variáveis de ambiente (`REACT_APP_` → `VITE_`) e trocar `process.env.REACT_APP_*` por `import.meta.env.VITE_*` no código.
-5. Rodar o dev server e testar:
-   ```powershell
-   npm run dev
-   # abre http://localhost:5173
-   ```
-6. Ajustar build/deploy:
-   ```powershell
-   npm run build
-   # saída em /dist
-   ```
+Para trocar capas ou valores, edite `defaultProducts` ou passe `products` via props ao `ProductList`.
 
-### 9) Quando manter CRA
+### 💳 Formas de pagamento
 
-- Projetos legados ou cursos que exigem `react-scripts`.
-- Quando o time não quer mexer em configuração agora.
+- Ícones/logos são renderizados em grade; tamanhos padronizados por CSS.
+- Imagens externas têm fallback SVG com texto caso falhem.
 
-### 10) Quando migrar para Vite
+### ✉️ Contato
 
-- Novos projetos.
-- Precisamos de builds rápidos.
-- Queremos flexibilidade (plugins, PWA, TS, Vue, Svelte, etc.).
+- Seção com endereço, telefone, e-mails e horário de atendimento.
 
-### Conclusão (para o colega que usa VS Code)
+### 🧪 Testes
 
-Se o projeto ainda está no começo e não depende de nada preso ao `react-scripts`, vale migrar agora. A principal mudança de código é nas variáveis de ambiente (`process.env.REACT_APP_*` → `import.meta.env.VITE_*`). O resto é copiar `src/` e ajustar o `index.html`. O ganho de performance compensa.
+```powershell
+npm test
+```
+
+Há um teste básico em `src/App.test.jsx` verificando o cabeçalho/navegação.
+
+### ✅ Qualidade de código
+
+- ESLint 9 (flat config) + Prettier 3 já configurados.
+- Ajuste as regras no `eslint.config.js` conforme necessário.
+
+### 📝 Notas
+
+- Os estilos do template original (main.css) não são mais utilizados; toda a base está em `public/assets/css/custom.css`.
+- O cabeçalho é fixo (sticky); adicionamos espaçamento para que os títulos não grudem na linha divisória entre seções.

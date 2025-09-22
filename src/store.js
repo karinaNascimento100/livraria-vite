@@ -31,6 +31,9 @@ function cartReducer(state = initialState, action) {
           .filter(i => (i.qty || 1) > 0),
       }
     }
+    case 'CLEAR_CART': {
+      return { ...state, cart: [] }
+    }
     default:
       return state
   }

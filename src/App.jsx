@@ -6,12 +6,40 @@ import Header from './components/Header'
 import ProductList from './components/ProductList'
 import Cart from './components/Cart'
 
-function Conta() {
+function SectionCatalog() {
   return (
-    <div className="container">
-      <header><h2>Minha Conta</h2></header>
-      <p>Área do cliente (exemplo).</p>
-    </div>
+    <section id="portfolio" className="two">
+      <div className="container">
+        <header>
+          <h2>Catálogo</h2>
+        </header>
+        <ProductList />
+      </div>
+    </section>
+  )
+}
+
+function SectionCart() {
+  return (
+    <section id="cart" className="two">
+      <div className="container">
+        <header>
+          <h2>Carrinho</h2>
+        </header>
+        <Cart />
+      </div>
+    </section>
+  )
+}
+
+function SectionConta() {
+  return (
+    <section id="account" className="two">
+      <div className="container">
+        <header><h2>Minha Conta</h2></header>
+        <p>Área do cliente (exemplo).</p>
+      </div>
+    </section>
   )
 }
 
@@ -22,10 +50,9 @@ const paymentLogos = [
   { name: 'Mastercard', src: 'https://leitura.com.br/app/cielo/images/mastercard.gif' },
   { name: 'American Express', src: 'https://leitura.com.br/app/cielo/images/amex.gif' },
   { name: 'Diners', src: 'https://leitura.com.br/app/cielo/images/diners.gif' },
-  { name: 'Elo', src: 'https://leitura.com.br/app/cielo/images/elo.gif' },
+  { name: 'Pix', src: 'https://static.estantevirtual.com.br/bnn/l_estantevirtual/2025-07-15/3688_pix.svg' },
   { name: 'Hipercard', src: 'https://leitura.com.br/app/cielo/images/hipercard.gif' },
   { name: 'Boleto', src: 'https://leitura.com.br/app/cielo/images/boleto.png' },
-  { name: 'Pix', src: 'https://static.estantevirtual.com.br/bnn/l_estantevirtual/2025-07-15/3688_pix.svg' },
 ]
 
 function AppInner() {
@@ -44,19 +71,12 @@ function AppInner() {
             {/* CTA removido conforme solicitação */}
           </div>
         </section>
-        <section id="portfolio" className="two">
-          <div className="container">
-            <header>
-              <h2>Catálogo</h2>
-            </header>
-            <Routes>
-              <Route path="/" element={<ProductList />} />
-              <Route path="/products" element={<ProductList />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/conta" element={<Conta />} />
-            </Routes>
-          </div>
-        </section>
+        <Routes>
+          <Route path="/" element={<SectionCatalog />} />
+          <Route path="/products" element={<SectionCatalog />} />
+          <Route path="/cart" element={<SectionCart />} />
+          <Route path="/conta" element={<SectionConta />} />
+        </Routes>
         <section id="about" className="three">
           <div className="container">
             <header>

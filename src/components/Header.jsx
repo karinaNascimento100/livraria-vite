@@ -26,16 +26,7 @@ export default function Header() {
         <form className="search" role="search" action="/products">
           <input name="q" type="search" placeholder="Buscar livros..." aria-label="Buscar" />
         </form>
-        <nav className="nav" aria-label="principal">
-          <ul className="nav__list">
-            <li>
-              <NavLink to="/" end className="nav__link">Início</NavLink>
-            </li>
-            <li>
-              <NavLink to="/products" className="nav__link">Catálogo</NavLink>
-            </li>
-          </ul>
-        </nav>
+        {/* Navegação principal removida (Início/Catálogo) conforme solicitação */}
       </div>
     </header>
   )
