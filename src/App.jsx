@@ -18,14 +18,14 @@ function Conta() {
 // Catálogo usa lista padrão de 10 capas em ProductList (imagens)
 
 const paymentLogos = [
-  { name: 'Visa', src: '/assets/img/payments/visa.png' },
-  { name: 'Mastercard', src: '/assets/img/payments/mastercard.png' },
-  { name: 'American Express', src: '/assets/img/payments/amex.png' },
-  { name: 'Bradesco', src: '/assets/img/payments/bradesco.png' },
-  { name: 'Elo', src: '/assets/img/payments/elo.png' },
-  { name: 'Hipercard', src: '/assets/img/payments/hipercard.png' },
-  { name: 'Boleto', src: '/assets/img/payments/boleto.png' },
-  { name: 'Pix', src: '/assets/img/payments/pix.png' },
+  { name: 'Visa', src: 'https://leitura.com.br/app/cielo/images/visa.gif' },
+  { name: 'Mastercard', src: 'https://leitura.com.br/app/cielo/images/mastercard.gif' },
+  { name: 'American Express', src: 'https://leitura.com.br/app/cielo/images/amex.gif' },
+  { name: 'Diners', src: 'https://leitura.com.br/app/cielo/images/diners.gif' },
+  { name: 'Elo', src: 'https://leitura.com.br/app/cielo/images/elo.gif' },
+  { name: 'Hipercard', src: 'https://leitura.com.br/app/cielo/images/hipercard.gif' },
+  { name: 'Boleto', src: 'https://leitura.com.br/app/cielo/images/boleto.png' },
+  { name: 'Pix', src: 'https://static.estantevirtual.com.br/bnn/l_estantevirtual/2025-07-15/3688_pix.svg' },
 ]
 
 function AppInner() {
