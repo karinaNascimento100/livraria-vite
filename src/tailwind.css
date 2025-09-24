@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global tweaks */
+body {
+  @apply bg-white text-gray-800 antialiased;
+}
+
+.button-primary {
+  @apply bg-primaryGreen text-white px-4 py-2 rounded-md font-medium hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.badge-cart {
+  @apply bg-brandPink text-white text-[10px] font-semibold px-2 py-1 rounded-full leading-none inline-flex items-center justify-center min-w-5;
+}

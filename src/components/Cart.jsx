@@ -13,52 +13,93 @@ export default function Cart() {
 
   if (!cart.length)
     return (
-      <div>
-        <p>Seu carrinho está vazio.</p>
-        <p>
-          <Link to="/products" className="button">Continuar comprando</Link>
-        </p>
+      <div className="max-w-4xl mx-auto bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Carrinho</h2>
+        <p className="text-gray-600 mb-6">Seu carrinho está vazio.</p>
+        <Link
+          to="/products"
+          className="inline-block bg-primaryGreen text-white px-5 py-2 rounded-md font-medium hover:bg-green-600 transition"
+        >
+          Continuar comprando
+        </Link>
       </div>
     )
 
   return (
-    <div>
-      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginBottom: '1rem', flexWrap: 'wrap' }}>
-        <Link to="/products" className="button">Continuar comprando</Link>
-        <button className="button alt" onClick={() => dispatch({ type: 'CLEAR_CART' })}>Esvaziar carrinho</button>
+    <div className="max-w-5xl mx-auto">
+      <div className="flex flex-wrap gap-3 justify-center mb-6">
+        <Link
+          to="/products"
+          className="bg-primaryGreen text-white px-4 py-2 rounded-md font-medium hover:bg-green-600 transition"
+        >
+          Continuar comprando
+        </Link>
+        <button
+          className="bg-red-100 text-red-700 px-4 py-2 rounded-md font-medium hover:bg-red-200 transition"
+          onClick={() => dispatch({ type: 'CLEAR_CART' })}
+        >
+          Esvaziar carrinho
+        </button>
       </div>
-      {cart.map(item => (
-        <article className="item" key={item.id} style={{ display: 'grid', gridTemplateColumns: '100px 1fr auto', gap: '1rem', alignItems: 'start', padding: '1rem 0', borderBottom: '1px solid #e5e7eb' }}>
-          <div className="image" style={{ width: 100 }}>
-            <img src={item.image} alt={item.name || 'Livro'} style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
-          </div>
-          <div>
-            <div style={{ fontSize: '0.9rem', color: '#374151' }}>Vendido por {item.seller || 'Livraria Online'}</div>
-            <h3 style={{ margin: '0.25rem 0' }}>{item.name || 'Livro'}</h3>
-            {item.isbn && <div>ISBN: {item.isbn}</div>}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', color: '#374151' }}>
-              {item.condition && <span>{item.condition}</span>}
-              {item.year && <span>Ano: {item.year}</span>}
-              {item.weight && <span>Peso: {item.weight}</span>}
-              {item.language && <span>Idioma: {item.language}</span>}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y">
+        {cart.map(item => (
+          <article
+            key={item.id}
+            className="grid grid-cols-[90px_1fr_auto] gap-4 p-4 last:rounded-b-lg first:rounded-t-lg"
+          >
+            <div className="w-[90px] h-[120px] overflow-hidden rounded bg-gray-50 flex items-center justify-center">
+              <img
+                src={item.image}
+                alt={item.name || 'Livro'}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div style={{ marginTop: '0.5rem' }}>
-              <label style={{ marginRight: '0.5rem' }}>Quantidade:</label>
-              <button className="button" onClick={() => dec(item.id)}>-1</button>
-              <span style={{ margin: '0 0.5rem' }}>{item.qty || 1}</span>
-              <button className="button" onClick={() => dispatch({ type: 'ADD_TO_CART', payload: item })}>+1</button>
-              <button className="button alt" style={{ marginLeft: '0.5rem' }} onClick={() => remove(item.id)}>Remover</button>
-            </div>
-            {item.seller && (
-              <div style={{ marginTop: '0.5rem' }}>
-                <Link to={`/products?q=${encodeURIComponent(item.seller)}`} className="button">Adicionar mais livros desse vendedor</Link>
+            <div className="space-y-2">
+              <div className="text-xs text-gray-500">Vendido por {item.seller || 'Livraria Online'}</div>
+              <h3 className="text-lg font-semibold text-gray-800 leading-snug">{item.name || 'Livro'}</h3>
+              {item.isbn && <div className="text-xs text-gray-500">ISBN: {item.isbn}</div>}
+              <div className="flex flex-wrap gap-3 text-[11px] text-gray-600">
+                {item.condition && <span className="px-2 py-0.5 bg-gray-100 rounded-full">{item.condition}</span>}
+                {item.year && <span className="px-2 py-0.5 bg-gray-100 rounded-full">Ano: {item.year}</span>}
+                {item.weight && <span className="px-2 py-0.5 bg-gray-100 rounded-full">Peso: {item.weight}</span>}
+                {item.language && <span className="px-2 py-0.5 bg-gray-100 rounded-full">Idioma: {item.language}</span>}
               </div>
-            )}
-          </div>
-          <div style={{ textAlign: 'right', minWidth: 100, fontWeight: 700 }}>{toBRL(item.price * (item.qty || 1))}</div>
-        </article>
-      ))}
-      <h3 style={{ textAlign: 'right' }}>Total: {toBRL(total)}</h3>
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-medium text-gray-700">Qtd:</span>
+                <button
+                  className="px-2 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded"
+                  onClick={() => dec(item.id)}
+                >-</button>
+                <span className="min-w-[2ch] text-center font-semibold">{item.qty || 1}</span>
+                <button
+                  className="px-2 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded"
+                  onClick={() => dispatch({ type: 'ADD_TO_CART', payload: item })}
+                >+</button>
+                <button
+                  className="ml-2 text-xs text-red-600 hover:underline"
+                  onClick={() => remove(item.id)}
+                >Remover</button>
+                {item.seller && (
+                  <Link
+                    to={`/products?q=${encodeURIComponent(item.seller)}`}
+                    className="ml-auto text-xs text-primaryGreen hover:underline"
+                  >
+                    + livros do vendedor
+                  </Link>
+                )}
+              </div>
+            </div>
+            <div className="text-right font-bold text-gray-800 min-w-[90px]">{toBRL(item.price * (item.qty || 1))}</div>
+          </article>
+        ))}
+      </div>
+      <div className="mt-6 flex justify-end">
+        <div className="text-right">
+          <div className="text-sm uppercase tracking-wide text-gray-500">Total</div>
+          <div className="text-2xl font-bold text-primaryGreen">{toBRL(total)}</div>
+        </div>
+      </div>
     </div>
   )
 }

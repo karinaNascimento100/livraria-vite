@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 const defaultProducts = [
   {
     id: 1,
-    name: 'Vantagem Competitiva - Criando e Sustentando Um Desempenho Superior',
+    name: 'HTML & CSS',
     image: 'https://leitura.com.br/image/cache/products/9788539648542-228x228.jpg',
     price: 35.0,
     seller: 'Sebo Abbondanza',
@@ -15,15 +15,15 @@ const defaultProducts = [
     weight: '850g',
     language: 'Português',
   },
-  { id: 2,  name: 'Livro 2', image: 'https://leitura.com.br/image/cache/products/9788575225202-228x228.jpg', price: 99.9, seller: 'Livraria Online' },
-  { id: 3,  name: 'Livro 3', image: 'https://leitura.com.br/image/cache/products/9786586057089-228x228.jpg', price: 139.9, seller: 'Livraria Online' },
-  { id: 4,  name: 'Livro 4', image: 'https://leitura.com.br/image/cache/products/9788576088455-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
-  { id: 5,  name: 'Livro 5', image: 'https://leitura.com.br/image/cache/products/9788576087441-228x228.jpg', price: 79.9, seller: 'Livraria Online' },
-  { id: 6,  name: 'Livro 6', image: 'https://leitura.com.br/image/cache/products/9788543019147-228x228.jpg', price: 119.9, seller: 'Livraria Online' },
-  { id: 7,  name: 'Livro 7', image: 'https://leitura.com.br/image/cache/products/9788575226568-228x228.jpg', price: 109.9, seller: 'Livraria Online' },
-  { id: 8,  name: 'Livro 8', image: 'https://leitura.com.br/image/cache/products/9788535210194-228x228.jpg', price: 149.9, seller: 'Livraria Online' },
-  { id: 9,  name: 'Livro 9', image: 'https://leitura.com.br/image/cache/products/9788586804960-228x228.jpg', price: 94.9, seller: 'Livraria Online' },
-  { id: 10, name: 'Livro 10', image: 'https://leitura.com.br/image/cache/products/9786586057393-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
+  { id: 2,  name: 'Primeiros Passos com React', image: 'https://leitura.com.br/image/cache/products/9788575225202-228x228.jpg', price: 99.9, seller: 'Livraria Online' },
+  { id: 3,  name: 'Programação WEB com Node e Express', image: 'https://leitura.com.br/image/cache/products/9786586057089-228x228.jpg', price: 139.9, seller: 'Livraria Online' },
+  { id: 4,  name: 'Programação em HTML5', image: 'https://leitura.com.br/image/cache/products/9788576088455-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
+  { id: 5,  name: 'Programação Profissional em HTML5', image: 'https://leitura.com.br/image/cache/products/9788576087441-228x228.jpg', price: 79.9, seller: 'Livraria Online' },
+  { id: 6,  name: 'Logica de Programação e Estrutura de Dados', image: 'https://leitura.com.br/image/cache/products/9788543019147-228x228.jpg', price: 119.9, seller: 'Livraria Online' },
+  { id: 7,  name: 'Logica de Programação e Algoritmos com Javascript', image: 'https://leitura.com.br/image/cache/products/9788575226568-228x228.jpg', price: 109.9, seller: 'Livraria Online' },
+  { id: 8,  name: 'Introdução a Programação', image: 'https://leitura.com.br/image/cache/products/9788535210194-228x228.jpg', price: 149.9, seller: 'Livraria Online' },
+  { id: 9,  name: 'Fundamentos de Programação', image: 'https://leitura.com.br/image/cache/products/9788586804960-228x228.jpg', price: 94.9, seller: 'Livraria Online' },
+  { id: 10, name: 'React Aprenda Praticando', image: 'https://leitura.com.br/image/cache/products/9786586057393-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
 ]
 
 export default function ProductList({ products = defaultProducts }) {
