@@ -11,7 +11,8 @@ export default function Header() {
       {/* Utility bar: localização, contato, conta, carrinho */}
       <div className="topbar">
         <ul className="topbar__list">
-          <li><a href="#contact" className="topbar__link">Contato</a></li>
+          <li><NavLink to="/sobre" className="topbar__link">Sobre</NavLink></li>
+          <li><NavLink to="/contato" className="topbar__link">Contato</NavLink></li>
           <li><NavLink to="/conta" className="topbar__link">Minha Conta</NavLink></li>
           <li><NavLink to="/cart" className="topbar__link">Carrinho ({count})</NavLink></li>
         </ul>
