@@ -47,4 +47,18 @@ export default [
       },
     },
   },
+  // Server (Node/CommonJS) files: allow require, module, __dirname, process
+  {
+    files: ['server/**/*.{js,cjs}'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      // Node code, relax browser-specific rules
+      'no-undef': 'off',
+    },
+  },
 ]

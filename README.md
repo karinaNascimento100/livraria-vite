@@ -107,3 +107,27 @@ Há um teste básico em `src/App.test.jsx` verificando o cabeçalho/navegação.
 
 - Os estilos do template original (main.css) não são mais utilizados; toda a base está em `public/assets/css/custom.css`.
 - O cabeçalho é fixo (sticky); adicionamos espaçamento para que os títulos não grudem na linha divisória entre seções.
+
+# Livraria Vite – Notas de Desenvolvimento
+
+## Modo independente (sem serviços externos)
+
+- Removemos os CDNs de Google Fonts e Font Awesome do `index.html` para que o projeto funcione offline.
+- Adicionamos mocks de API no navegador que simulam os endpoints `/api` (login, register, forgot-password, users, me, health).
+- Por padrão em desenvolvimento os mocks ficam ATIVOS via `.env.development`.
+
+### Como funciona
+- Quando `VITE_MOCK_API=true`, o app intercepta `fetch('/api/...')` no browser e responde localmente.
+- Os mocks emulam o comportamento do backend simples usado no projeto (inclui usuários demo, mensagens padrão e token base64).
+
+### Habilitar/Desabilitar mocks
+- Desenvolvimento (padrão): `VITE_MOCK_API=true` no `.env.development`.
+- Para usar o backend real, defina `VITE_MOCK_API=false` (ou remova a variável) e execute o servidor API (porta 3001). O Vite já tem proxy `/api` → `http://localhost:3001` no `vite.config.js`.
+
+### Endpoints simulados
+- POST `/api/login` → `{ success, message, token, user }` | mensagens: "Login successful! Welcome back." ou "Invalid username or password". Após 3 falhas, bloqueia (opcional).
+- POST `/api/register` → valida campos e unicidade; retorna `{ success, user }` com 201.
+- POST `/api/forgot-password` → `{ success: true, newPassword: 'newpassword' }`.
+- GET `/api/users` → lista usuários demo (username/email).
+- GET `/api/me` → requer `Authorization: Bearer <token>` do login.
+- GET `/api/health` ou `/api` → status do mock.
