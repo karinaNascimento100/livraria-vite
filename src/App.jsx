@@ -103,7 +103,7 @@ function AppInner() {
           <Route path="/contato" element={
             <section id="contato" className="two">
               <div className="container">
-                <header><h2>Contato</h2></header>
+                <header><h2>Onde nos encontrar</h2></header>
                 <Contact />
               </div>
             </section>
@@ -134,7 +134,7 @@ function AppInner() {
         <section id="contact" className="four">
           <div className="container">
             <header>
-              <h2>Contato</h2>
+              <h2>Onde nos encontrar</h2>
             </header>
             <p>
               Endereço: Av. Orlando Gomes, 1845 - Piatã, Salvador - BA, 41650-010<br />

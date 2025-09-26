@@ -44,14 +44,24 @@ export default function Contact() {
         </div>
         <iframe
           className="rounded-lg mt-3"
-          src="https://www.google.com/maps?q=-12.9704,-38.5124&z=15&output=embed"
+          src="https://www.google.com/maps?q=Senai%20CIMATEC%2C%20Av.%20Orlando%20Gomes%2C%201845%20-%20Piat%C3%A3%2C%20Salvador%20-%20BA&z=16&output=embed"
           width="100%"
           height="220"
           allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          title="Mapa"
+          title="Mapa CIMATEC"
         />
+        <div className="mt-2">
+          <a
+            href="https://maps.app.goo.gl/wggCbKvv3xcuEvbK8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-700 underline"
+          >
+            Abrir no Google Maps
+          </a>
+        </div>
 
         <h2 className="text-xl font-semibold text-gray-800 mt-6">Formulário de Contato</h2>
         <form className="mt-3" onSubmit={onSubmit} noValidate>

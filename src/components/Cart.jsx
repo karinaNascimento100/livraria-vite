@@ -14,11 +14,10 @@ export default function Cart() {
   if (!cart.length)
     return (
       <div className="max-w-4xl mx-auto bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Carrinho</h2>
         <p className="text-gray-600 mb-6">Seu carrinho está vazio.</p>
         <Link
           to="/products"
-          className="inline-block bg-primaryGreen text-white px-5 py-2 rounded-md font-medium hover:bg-green-600 transition"
+          className="button"
         >
           Continuar comprando
         </Link>
@@ -32,12 +31,12 @@ export default function Cart() {
       <div className="flex flex-wrap gap-3 justify-center mb-8">
         <Link
           to="/products"
-          className="bg-primaryGreen text-white px-5 py-2 rounded-md font-medium hover:bg-green-600 transition"
+          className="button"
         >
           Continuar comprando
         </Link>
         <button
-          className="bg-red-100 text-red-700 px-5 py-2 rounded-md font-medium hover:bg-red-200 transition"
+          className="button alt"
           onClick={() => dispatch({ type: 'CLEAR_CART' })}
         >
           Esvaziar carrinho

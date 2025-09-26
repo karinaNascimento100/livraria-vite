@@ -83,6 +83,8 @@ img { max-width: 100%; height: auto; display: block; }
   width: 32px;
   height: 32px;
   border-radius: 9999px;
+  background: #fff; /* ensure contrast on dark header */
+  box-shadow: 0 0 0 2px #fff; /* thin white ring */
 }
 .brand__title {
   font-weight: 600;
@@ -241,6 +243,10 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Center section headers (Catálogo, Formas de Pagamento, Contato, etc.) */
 #main > section .container > header { text-align: center; }
+/* Emphasize main section headings */
+#main > section .container > header h2 {
+  font-size: clamp(1.6rem, 2.5vw + 0.5rem, 2.25rem);
+}
 
 /* Divider between sections (except the first hero) */
 #main > section + section {
@@ -314,3 +320,46 @@ body, #main, #footer { margin-left: 0 !important; }
   flex-wrap: wrap;
 }
 #footer .copyright li { margin: 0; }
+
+/* ================= Horizontal scroller ================= */
+/* Container that enables horizontal scrolling on small/medium screens */
+.h-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory; /* snap to cards */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable; /* keep layout stable when scrollbar shows */
+}
+
+/* Use nowrap flow when scroller is active */
+.h-scroll {
+  flex-wrap: nowrap;
+}
+
+/* Each child (card column) snaps to start */
+.h-scroll .snap-start { scroll-snap-align: start; }
+
+/* Card min-width to create visible slides on narrow screens */
+.h-scroll .col-1-5 {
+  flex: 0 0 calc(60% - 1.5rem);
+  max-width: calc(60% - 1.5rem);
+}
+
+/* Tablet: show ~2–3 per view */
+@media (min-width: 640px) {
+  .h-scroll .col-1-5 { flex-basis: calc(50% - 1.5rem); max-width: calc(50% - 1.5rem); }
+}
+@media (min-width: 900px) {
+  .h-scroll .col-1-5 { flex-basis: calc(33.333% - 1.5rem); max-width: calc(33.333% - 1.5rem); }
+}
+/* Desktop: show 4 per view and keep scrolling */
+@media (min-width: 1200px) {
+  .h-scroll .col-1-5 { flex-basis: calc(25% - 1.5rem); max-width: calc(25% - 1.5rem); }
+}
+
+/* Horizontal scrollbar styling (WebKit and Firefox) */
+.h-scroll::-webkit-scrollbar { height: 12px; }
+.h-scroll::-webkit-scrollbar-track { background: rgba(59, 46, 46, 0.18); border-radius: 999px; }
+.h-scroll::-webkit-scrollbar-thumb { background: rgba(59, 46, 46, 0.55); border-radius: 999px; }
+.h-scroll::-webkit-scrollbar-thumb:hover { background: rgba(59, 46, 46, 0.7); }
+.h-scroll { scrollbar-color: rgba(59, 46, 46, 0.6) rgba(59, 46, 46, 0.18); scrollbar-width: auto; }

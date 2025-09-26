@@ -43,9 +43,9 @@ export default function ProductList({ products = defaultProducts }) {
   }
 
   return (
-    <div className="row">
+    <div className="row h-scroll">
       {filtered.map(p => (
-        <div className="col-1-5 col-12-mobile" key={p.id}>
+        <div className="col-1-5 col-12-mobile snap-start" key={p.id}>
           <article className="item">
             <div className="image fit">
               <img
