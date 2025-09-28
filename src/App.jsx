@@ -55,7 +55,7 @@ function SectionConta() {
   )
 }
 
-// Catálogo usa lista padrão de 10 capas em ProductList (imagens)
+// Catálogo padrão: 10 itens definidos em ProductList (imagens e preços)
 
 const paymentLogos = [
   { name: 'Visa', src: 'https://leitura.com.br/app/cielo/images/visa.gif' },
@@ -93,7 +93,7 @@ function AppInner() {
           <Route path="/cart" element={<SectionCart />} />
           <Route path="/conta" element={<SectionConta />} />
           <Route path="/sobre" element={
-            <section id="sobre" className="two">
+            <section id="sobre" className="two about-theme">
               <div className="container">
                 <header><h2>Sobre</h2></header>
                 <About includeHeading={true} />

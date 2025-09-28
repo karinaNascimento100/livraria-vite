@@ -1,8 +1,8 @@
 ## Livraria Vite — Parada Obrigatória 1
 
-Aplicação web simples de livraria feita com Vite + React. Catálogo com 10 livros (capas), botão “Comprar” que adiciona ao carrinho (Redux), lista de formas de pagamento e seção de contato.
+Aplicação de livraria online implementada com Vite + React, Redux para gerenciamento do carrinho e React Router para navegação. Este README contempla orientações, proposta e etapas da atividade.
 
-### 👀 Visão geral
+### Visão geral
 
 - Build e dev server com Vite
 - React Router (rotas: /, /products, /cart, /conta)
@@ -10,7 +10,112 @@ Aplicação web simples de livraria feita com Vite + React. Catálogo com 10 liv
 - Testes com Vitest + Testing Library
 - ESLint (flat) e Prettier
 
-### 🚀 Como rodar
+## Orientações gerais (atividade)
+
+- Atividade individual (pontuação: 7,0 pontos) com prazo no AVA.
+- Temas contemplados: HTML, CSS, JavaScript, Node.js, componentes reutilizáveis (biblioteca JS), headers/cabeçalhos HTTP, frameworks JS e APIs avançadas.
+- A avaliação seguirá a rubrica definida no AVA.
+
+## Proposta
+
+Implementar a funcionalidade de carrinho de compras de uma livraria online, aplicando gerenciamento de estado e componentização. O usuário pode adicionar produtos ao carrinho, visualizar os itens e removê-los.
+
+## Escopo da entrega (Parada Obrigatória 1)
+
+- O objeto de avaliação nesta etapa é exclusivamente a funcionalidade de carrinho de compras (adicionar, decrementar, remover e limpar itens, com totalização).
+- As seções "Contato" e "Minha Conta" foram incluídas apenas para dar maior realismo e coerência de navegação, porém não fazem parte do escopo avaliado nesta Parada Obrigatória 1.
+- O projeto continuará sendo evoluído após a entrega, com o aprofundamento dessas e de outras funcionalidades.
+
+## Etapa 1 — Base do projeto (sem carrinho)
+
+1) Configuração do projeto com Vite + React
+2) Dependências para estado e rotas:
+
+```powershell
+npm install @reduxjs/toolkit react-redux react-router-dom
+```
+
+3) Configuração do Redux (arquivo `src/store.js`)
+
+O projeto usa `configureStore` do RTK com um reducer simples do carrinho:
+
+```js
+import { configureStore } from '@reduxjs/toolkit'
+
+const initialState = { cart: [] }
+
+function cartReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'ADD_TO_CART': {
+      const exists = state.cart.find(i => i.id === action.payload.id)
+      if (exists) {
+        return {
+          ...state,
+          cart: state.cart.map(i => (
+            i.id === action.payload.id ? { ...i, qty: (i.qty || 1) + 1 } : i
+          )),
+        }
+      }
+      return { ...state, cart: [...state.cart, { ...action.payload, qty: 1 }] }
+    }
+    case 'REMOVE_FROM_CART': {
+      const id = action.payload.id ?? action.payload
+      return { ...state, cart: state.cart.filter(item => item.id !== id) }
+    }
+    case 'DECREMENT_QTY': {
+      const id = action.payload.id ?? action.payload
+      return {
+        ...state,
+        cart: state.cart
+          .map(i => (i.id === id ? { ...i, qty: (i.qty || 1) - 1 } : i))
+          .filter(i => (i.qty || 1) > 0),
+      }
+    }
+    case 'CLEAR_CART': {
+      return { ...state, cart: [] }
+    }
+    default:
+      return state
+  }
+}
+
+const store = configureStore({ reducer: cartReducer })
+export default store
+```
+
+4) Provider do Redux + React Router (resumo)
+
+O projeto envolve o `App` com `<Provider store={store}>` e usa `BrowserRouter` nas rotas (`react-router-dom@7`).
+
+## Etapa 2 — Componentes e integração do carrinho
+
+1) Catálogo (`ProductList.jsx`): renderiza lista, preço e botão “Comprar” que dispara `ADD_TO_CART`.
+2) Carrinho (`Cart.jsx`): lê `cart` via `useSelector`, permite remover (`REMOVE_FROM_CART`) e decrementar (`DECREMENT_QTY`), além de limpar (`CLEAR_CART`).
+3) Rotas (`App.jsx`): define `/`, `/products`, `/cart` e links no `Header.jsx`.
+
+## Etapa 3 — Documentação e evidências
+
+Para a entrega, gere um PDF contendo:
+- Descrição do projeto e principais funcionalidades
+- Capturas de tela que comprovem:
+  1. Catálogo com lista e botão “Comprar”
+  2. Item adicionado (contador no header)
+  3. Página do carrinho com listagem
+  4. Remoção/decremento de itens
+  5. Total do carrinho atualizado
+
+Sugestão de estrutura do PDF: capa, sumário, arquitetura (componentes/estado), funcionalidades do carrinho (prints + descrição), conclusão (lições e próximos passos).
+
+### Checklist de evidências (para o PDF)
+
+- [ ] Catálogo visível com títulos e botões “Comprar”
+- [ ] Header com contador de itens no link “Carrinho”
+- [ ] Página “Carrinho” listando itens com imagem, nome, atributos e total por item
+- [ ] Ações funcionando: Remover, Diminuir quantidade, Esvaziar carrinho
+- [ ] Total geral do carrinho atualizado e destacado
+- [ ] Seções auxiliares (Sobre, Onde nos encontrar, Minha Conta) presentes para navegação
+
+### Como rodar
 
 1) Instale as dependências
 
@@ -38,7 +143,7 @@ npm run build
 npm run preview
 ```
 
-### 🧩 Scripts úteis
+### Scripts úteis
 
 - `npm run dev` — inicia o servidor de desenvolvimento
 - `npm run build` — gera build de produção
@@ -50,7 +155,7 @@ npm run preview
 - `npm run format` — checa formatação (Prettier)
 - `npm run format:write` — formata arquivos com Prettier
 
-### 🗂️ Estrutura principal
+### Estrutura principal
 
 ```
 public/
@@ -65,14 +170,14 @@ src/
     Cart.jsx              # carrinho (lista, decremento e remoção)
 ```
 
-### 🧭 Rotas e seções
+### Rotas e seções
 
 - Home/Catálogo: `/` ou `/products` → renderiza `ProductList`
 - Carrinho: `/cart` → renderiza `Cart`
 - Minha Conta (exemplo): `/conta`
 - Formas de Pagamento e Contato: seções na mesma página principal
 
-### 🛒 Catálogo e preços
+### Catálogo e preços
 
 - O catálogo padrão (10 itens) está em `src/components/ProductList.jsx` na constante `defaultProducts`.
 - Cada item tem `id`, `image` e `price`.
@@ -81,16 +186,17 @@ src/
 
 Para trocar capas ou valores, edite `defaultProducts` ou passe `products` via props ao `ProductList`.
 
-### 💳 Formas de pagamento
+### Formas de pagamento
 
 - Ícones/logos são renderizados em grade; tamanhos padronizados por CSS.
 - Imagens externas têm fallback SVG com texto caso falhem.
 
-### ✉️ Contato
+### Onde nos encontrar
 
 - Seção com endereço, telefone, e-mails e horário de atendimento.
+- Mapa aponta para o SENAI CIMATEC e há link para abrir no Google Maps.
 
-### 🧪 Testes
+### Testes
 
 ```powershell
 npm test
@@ -98,12 +204,12 @@ npm test
 
 Há um teste básico em `src/App.test.jsx` verificando o cabeçalho/navegação.
 
-### ✅ Qualidade de código
+### Qualidade de código
 
 - ESLint 9 (flat config) + Prettier 3 já configurados.
 - Ajuste as regras no `eslint.config.js` conforme necessário.
 
-### 📝 Notas
+### Notas
 
 - Os estilos do template original (main.css) não são mais utilizados; toda a base está em `public/assets/css/custom.css`.
 - O cabeçalho é fixo (sticky); adicionamos espaçamento para que os títulos não grudem na linha divisória entre seções.

@@ -21,7 +21,7 @@ export default function AuthRegister() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-md mx-auto bg-white rounded-md shadow p-6">
+    <form onSubmit={onSubmit} className="max-w-md mx-auto account-wrapper p-6">
       <h3 className="text-xl font-semibold mb-4">Criar conta</h3>
       <label className="block text-sm font-medium">Usuário</label>
       <input name="username" value={form.username} onChange={onChange} className="mt-1 w-full border rounded px-3 py-2" required />

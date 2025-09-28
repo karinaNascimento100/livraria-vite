@@ -18,7 +18,7 @@ export default function Contact() {
   }
 
   const validatePhone = (raw) => {
-    // aceita apenas números, 10 ou 11 dígitos (ex.: 7133330000, 71999990000)
+    // Valida formato: apenas números, 10 ou 11 dígitos (ex.: 7133330000, 71999990000)
     return /^\d{10,11}$/.test((raw || '').trim())
   }
 
@@ -28,14 +28,14 @@ export default function Contact() {
       alert('Telefone inválido. Digite apenas números com DDD (10 a 11 dígitos).')
       return
     }
-    // Simulação de envio
+  // Simulação de envio da mensagem
     setSent(true)
     setForm({ nome: '', telefone: '', email: '', assunto: '', mensagem: '' })
     setTimeout(() => setSent(false), 4000)
   }
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden">
+    <div className="max-w-3xl mx-auto contact-wrapper overflow-hidden">
       <div className="p-6 sm:p-8">
         <div className="space-y-1 text-gray-700">
           <p><strong>Telefones:</strong> (71) 3462-9580</p>
@@ -57,7 +57,7 @@ export default function Contact() {
             href="https://maps.app.goo.gl/wggCbKvv3xcuEvbK8"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-blue-700 underline"
+            className="button"
           >
             Abrir no Google Maps
           </a>
@@ -126,12 +126,12 @@ export default function Contact() {
           />
 
           <div className="mt-3 flex items-center gap-3">
-            <button type="submit" className="bg-primaryGreen text-white px-4 py-2 rounded-md font-medium hover:bg-green-600">
+            <button type="submit" className="button">
               Enviar
             </button>
             <button
               type="reset"
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md font-medium hover:bg-gray-300"
+              className="button"
               onClick={() => setForm({ nome: '', telefone: '', email: '', assunto: '', mensagem: '' })}
             >
               Limpar
@@ -146,7 +146,7 @@ export default function Contact() {
         )}
 
         <div className="mt-6">
-          <Link to="/" className="inline-block text-white bg-gray-800 px-4 py-2 rounded-md hover:bg-gray-700">
+          <Link to="/" className="button">
             &larr; Voltar para a página inicial
           </Link>
         </div>

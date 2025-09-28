@@ -5,30 +5,30 @@ export default function Banner({
   alt = 'Banner da livraria',
   className = '',
   heightClass = 'max-h-72',
-  fit = 'cover', // 'cover' or 'contain'
-  position = 'center', // e.g., 'center', 'top', 'bottom'
-  // Responsive images
-  srcSet, // string or array of entries: [{ src: string, width?: number, density?: number }]
-  sizes,  // string per HTML sizes attribute, e.g., "100vw"
-  // Quality behavior
-  preventUpscale = true, // if true, avoid enlarging beyond natural size by switching to contain
-  fetchPriority = 'high', // 'high' | 'low' | 'auto'
+  fit = 'cover', // cover ou contain
+  position = 'center', // center, top, bottom
+  // Imagens responsivas
+  srcSet, // string ou array: [{ src, width?: number, density?: number }]
+  sizes,  // string conforme atributo HTML sizes, ex.: "100vw"
+  // Qualidade
+  preventUpscale = true, // evita ampliar além do tamanho natural (muda para contain)
+  fetchPriority = 'high', // high | low | auto
   decoding = 'async',
 }) {
   const isDev = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV
   const containerRef = useRef(null)
   const imgRef = useRef(null)
   const [effectiveFit, setEffectiveFit] = useState(fit)
-  // Lista de fontes: tenta as informadas e variações de nome; por fim cai para um SVG neutro
+  // Fontes candidatas: principal → variações → placeholder SVG
   const fallbacks = [
-    // Caminhos preferenciais dentro de public/assets/img
+    // Preferência: public/assets/img
     '/assets/img/FiguraBiblioteca.jpg',
     '/assets/img/figurabiblioteca.jpg',
     '/assets/img/figura-biblioteca.jpg',
   '/assets/img/FiguraBiblioteca.jpeg',
   '/assets/img/FiguraBiblioteca.PNG',
     '/assets/img/FiguraBiblioteca.png',
-    // Alternativos antigos (sem /assets)
+    // Alternativos (sem /assets)
     '/img/FiguraBiblioteca.jpg',
     '/img/figura-biblioteca.jpg',
   ]
@@ -57,11 +57,11 @@ export default function Banner({
     const next = img.dataset.next?.split('|') || []
     if (next.length > 0) {
       const [head, ...rest] = next
-      if (isDev) console.warn('[Banner] fallback para:', head)
+      if (isDev) console.warn('[Banner] tentando fonte alternativa:', head)
       img.src = head
       img.dataset.next = rest.join('|')
     } else {
-      if (isDev) console.warn('[Banner] sem fontes válidas, exibindo placeholder')
+      if (isDev) console.warn('[Banner] sem fontes válidas; exibindo placeholder')
       img.src = placeholderSvg
     }
   }
@@ -79,7 +79,7 @@ export default function Banner({
     const wrapperW = wrapper.clientWidth || 0
     const wrapperH = wrapper.clientHeight || 0
 
-    // If wrapper would enlarge the image significantly in either dimension, prefer contain to avoid blur
+  // Se o contêiner ampliaria a imagem, usar contain para evitar desfoque
     const willUpscaleW = wrapperW > naturalW
     const willUpscaleH = wrapperH > naturalH
     const shouldContain = (willUpscaleW || willUpscaleH)

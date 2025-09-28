@@ -363,3 +363,64 @@ body, #main, #footer { margin-left: 0 !important; }
 .h-scroll::-webkit-scrollbar-thumb { background: rgba(59, 46, 46, 0.55); border-radius: 999px; }
 .h-scroll::-webkit-scrollbar-thumb:hover { background: rgba(59, 46, 46, 0.7); }
 .h-scroll { scrollbar-color: rgba(59, 46, 46, 0.6) rgba(59, 46, 46, 0.18); scrollbar-width: auto; }
+
+/* ================= About page warm theme (scoped) ================= */
+.about-theme {
+  /* variables for this section only */
+  --bg: #efe5dc;         /* fundo geral */
+  --surface: #f7f3ee;    /* cartões (papel) levemente mais escuro */
+  --text: #2b2b2b;       /* texto principal */
+  --brand: #7a4c24;      /* marrom da marca */
+  --brand-ink: #5d3a1a;  /* títulos */
+  --border: #e8e1d9;
+}
+
+.about-theme .container {
+  color: var(--text);
+  line-height: 1.7;
+  padding: clamp(12px, 2vw, 16px);
+}
+
+.about-theme header h2 { color: var(--brand-ink); letter-spacing: .2px; }
+
+.about-theme .about-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+.about-theme a { color: var(--brand-ink); opacity: .9; }
+.about-theme a:hover { opacity: 1; }
+
+/* Optional: soften pure white buttons inside about */
+.about-theme .button--light{ background:#fff; filter:brightness(.98); }
+
+/* Variant: no card (text directly on page) */
+.about-theme.no-card .about-card{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+/* ========= Reusable paper card for other pages ========= */
+.paper-card {
+  background: #f7f3ee; /* same as --surface */
+  border: 1px solid #e8e1d9;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* Contact and Account forms as paper cards */
+.contact-wrapper,
+.account-wrapper,
+.cart-wrapper { /* cart container */
+  background: #f7f3ee;
+  border: 1px solid #e8e1d9;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+  padding: 1rem;
+}
+

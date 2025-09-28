@@ -13,7 +13,7 @@ export default function Cart() {
 
   if (!cart.length)
     return (
-      <div className="max-w-4xl mx-auto bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
+      <div className="max-w-4xl mx-auto cart-wrapper p-8">
         <p className="text-gray-600 mb-6">Seu carrinho está vazio.</p>
         <Link
           to="/products"
@@ -23,9 +23,7 @@ export default function Cart() {
         </Link>
       </div>
     )
-
-  // Agrupar por vendedor (seller) para separação opcional
-  // Layout em lista: imagem à esquerda, descrição à direita
+  // Layout em lista: imagem à esquerda e informações à direita
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-wrap gap-3 justify-center mb-8">
@@ -36,14 +34,14 @@ export default function Cart() {
           Continuar comprando
         </Link>
         <button
-          className="button alt"
+          className="button"
           onClick={() => dispatch({ type: 'CLEAR_CART' })}
         >
           Esvaziar carrinho
         </button>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y">
+      <div className="cart-wrapper divide-y">
         {cart.map(item => (
           <article
             key={item.id}
@@ -89,13 +87,13 @@ export default function Cart() {
                 <span className="font-bold text-primaryGreen text-sm md:text-base">{toBRL(item.price * (item.qty || 1))}</span>
               </div>
             </div>
-            {/* Coluna de preço removida; valor agora dentro do bloco principal */}
+              {/* Preço consolidado exibido no bloco principal */}
           </article>
         ))}
       </div>
       <div className="mt-6 flex justify-end">
         <div className="text-right">
-          <div className="text-sm uppercase tracking-wide text-gray-500">Total</div>
+          <div className="text-2xl font-bold text-primaryGreen">Total</div>
           <div className="text-2xl font-bold text-primaryGreen">{toBRL(total)}</div>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function ProductList({ products = defaultProducts }) {
     : products
 
   const addToCart = (p) => {
-    // Garantir price para não quebrar o carrinho (fallback 0)
+    // Garantia de preço numérico (fallback 0)
     const priceSafe = typeof p.price === 'number' ? p.price : 0
     dispatch({ type: 'ADD_TO_CART', payload: { ...p, price: priceSafe } })
   }
@@ -53,6 +53,7 @@ export default function ProductList({ products = defaultProducts }) {
                 alt={p.name || 'Livro'}
                 loading="lazy"
                 onError={(e) => {
+                  // Fallback visual para capa ausente/erro de rede
                   const svg = encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 450'><rect width='100%' height='100%' fill='#1f2937'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#e5e7eb' font-family='Arial, sans-serif' font-size='24'>Capa</text></svg>`)
                   e.currentTarget.src = `data:image/svg+xml;utf8,${svg}`
                 }}

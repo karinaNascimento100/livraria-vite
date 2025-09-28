@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      {/* Main bar: logo à esquerda, links à direita */}
+      {/* Barra principal: logotipo à esquerda e links à direita */}
       <div className="site-header__inner mainbar">
         <div className="brand">
           <img
@@ -16,7 +16,7 @@ export default function Header() {
             src="https://th.bing.com/th/id/ODF.gkppZSyoAK5-LbHPbD7WwA?w=32&h=32&qlt=90&pcl=fffffa&o=6&pid=1.2"
             alt="Avatar"
             onError={(e) => {
-              // Fallback: simple white circle for contrast
+              // Fallback: círculo branco para garantir contraste no header escuro
               const svg = encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='#ffffff'/></svg>")
               e.currentTarget.src = `data:image/svg+xml;utf8,${svg}`
             }}

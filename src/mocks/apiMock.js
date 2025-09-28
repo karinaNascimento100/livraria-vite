@@ -1,18 +1,10 @@
-// Lightweight browser-side API mock to make the app self-contained (runs on port 5174 only)
-// Contract: Intercepts window.fetch for URLs that start with '/api'.
-// Features:
-// - Endpoints: POST /api/login, POST /api/register, POST /api/forgot-password,
-//              GET /api/users, GET /api/me, GET /api/health
-// - Simulated users in-memory, token issuance/verification, attempt-based blocking (optional)
-// - Responses aligned with current backend and the team "artifício":
-//   * login: success message "Login successful! Welcome back." or "Invalid username or password"
-//   * forgot-password: returns { success: true, newPassword: 'newpassword' }
-//   * register: validates basic fields and unique username/email
-//   * health: { ok: true, name: 'Livraria API (mock)', version: '1.0.0', docs: '/api/health' }
+// Mock de API no navegador para uso local (autônomo)
+// Intercepta window.fetch para URLs iniciadas em '/api'. Endpoints: POST login/register/forgot-password; GET users/me/health.
+// Usuários em memória, token base64 (apenas demonstração) e bloqueio opcional após tentativas inválidas.
 
 
 const MOCK_LATENCY_MS = 500
-const ENABLE_ATTEMPT_BLOCK = true // optional: set false to disable blocking logic
+const ENABLE_ATTEMPT_BLOCK = true // desative para remover bloqueio por tentativas
 const MAX_ATTEMPTS = 3
 
 const users = [
@@ -20,7 +12,7 @@ const users = [
   { id: 2, username: 'bob', email: 'bob@example.com', password: 'bob123' },
 ]
 
-const attempts = new Map() // key: username, value: count
+const attempts = new Map() // chave: username, valor: contagem de tentativas
 
 function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -37,7 +29,7 @@ function errorResponse(message, status = 400) {
 }
 
 function makeToken(payload) {
-  // Simple base64 token (NOT secure; just a mock)
+  // Token base64 (não seguro; uso apenas didático)
   return btoa(JSON.stringify({ ...payload, iat: Date.now() }))
 }
 
@@ -107,7 +99,7 @@ async function handleForgot(body) {
   if (!email) return errorResponse('email is required', 400)
   const user = users.find(u => u.email === email)
   if (!user) return errorResponse('User not found', 404)
-  // team artificio: always returns newpassword
+  // Retorna sempre a senha temporária "newpassword"
   return jsonResponse({ success: true, newPassword: 'newpassword' })
 }
 
@@ -120,7 +112,7 @@ async function handleMe(headers) {
 }
 
 async function handleUsers() {
-  // demo list of users
+  // Lista demo de usuários
   return jsonResponse({ success: true, users: users.map(({ username, email }) => ({ username, email })) })
 }
 
@@ -130,7 +122,7 @@ async function handleHealth() {
 
 function isApiUrl(url) {
   try {
-    // Accept absolute or relative URLs
+  // Aceita URLs absolutas ou relativas
     const u = new URL(url, window.location.origin)
     return u.pathname.startsWith('/api')
   } catch {
@@ -154,7 +146,7 @@ export function enableApiMock() {
         try { body = JSON.parse(init.body) } catch { body = undefined }
       }
 
-      // Optional latency to mimic network
+  // Latência opcional para simular rede
       if (MOCK_LATENCY_MS) await wait(MOCK_LATENCY_MS)
 
       const { pathname } = new URL(url, window.location.origin)
@@ -167,7 +159,7 @@ export function enableApiMock() {
       if (pathname === '/api/health' && method === 'GET') return handleHealth()
       if (pathname === '/api' && method === 'GET') return handleHealth()
 
-      // Fallback: 404 for unknown API route
+  // 404 para rotas não mapeadas
       return jsonResponse({ success: false, message: 'Not Found' }, { status: 404 })
     } catch (err) {
       console.warn('[apiMock] error intercepting fetch', err)
