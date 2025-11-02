@@ -2,8 +2,19 @@
   "name": "livraria-vite",
   "version": "1.0.0",
   "description": "Esta nota explica por que e como migrar de Create React App (CRA) para Vite, com foco prático para quem usa VS Code em Windows.",
-  "main": "index.js",
+  "keywords": [],
+  "homepage": "https://github.com/karinaNascimento100/livraria-vite#readme",
+  "bugs": {
+    "url": "https://github.com/karinaNascimento100/livraria-vite/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karinaNascimento100/livraria-vite.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,23 +26,12 @@
     "format": "prettier . --check",
     "format:write": "prettier . --write"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/karinaNascimento100/livraria-vite.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/karinaNascimento100/livraria-vite/issues"
-  },
-  "homepage": "https://github.com/karinaNascimento100/livraria-vite#readme",
   "dependencies": {
-    "@reduxjs/toolkit": "^2.9.0",
+    "@reduxjs/toolkit": "^2.9.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.9.1",
+    "react-router-dom": "^7.9.4",
     "redux": "^5.0.1"
   },
   "devDependencies": {

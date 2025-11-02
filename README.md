@@ -1,239 +1,226 @@
-## Livraria Vite — Parada Obrigatória 1
+# Livraria Vite — Parada Obrigatória 2
 
-Aplicação de livraria online implementada com Vite + React, Redux para gerenciamento do carrinho e React Router para navegação. Este README contempla orientações, proposta e etapas da atividade.
+Repositório base para a segunda Parada Obrigatória. Mantemos a estrutura do projeto da entrega anterior, mas o foco agora é **avaliar e aprimorar a acessibilidade** da aplicação conforme as etapas abaixo.
 
-### Visão geral
+---
 
-- Build e dev server com Vite
-- React Router (rotas: /, /products, /cart, /conta)
-- Redux para carrinho (adicionar, decrementar, remover)
-- Testes com Vitest + Testing Library
-- ESLint (flat) e Prettier
+## Etapa 1 · Configuração inicial
 
-## Orientações gerais (atividade)
+1. **Instalação de dependências essenciais**
 
-- Atividade individual (pontuação: 7,0 pontos) com prazo no AVA.
-- Temas contemplados: HTML, CSS, JavaScript, Node.js, componentes reutilizáveis (biblioteca JS), headers/cabeçalhos HTTP, frameworks JS e APIs avançadas.
-- A avaliação seguirá a rubrica definida no AVA.
+   ```powershell
+   npm install redux react-redux react-router-dom
+   ```
 
-## Proposta
+2. **Configuração do Redux (`src/store.js`)**
 
-Implementar a funcionalidade de carrinho de compras de uma livraria online, aplicando gerenciamento de estado e componentização. O usuário pode adicionar produtos ao carrinho, visualizar os itens e removê-los.
+   ```js
+   import { createStore } from 'redux'
 
-## Escopo da entrega (Parada Obrigatória 1)
+   const initialState = { cart: [] }
 
-- O objeto de avaliação nesta etapa é exclusivamente a funcionalidade de carrinho de compras (adicionar, decrementar, remover e limpar itens, com totalização).
-- As seções "Contato" e "Minha Conta" foram incluídas apenas para dar maior realismo e coerência de navegação, porém não fazem parte do escopo avaliado nesta Parada Obrigatória 1.
-- O projeto continuará sendo evoluído após a entrega, com o aprofundamento dessas e de outras funcionalidades.
+   const cartReducer = (state = initialState, action) => {
+     switch (action.type) {
+       case 'ADD_TO_CART':
+         return { ...state, cart: [...state.cart, action.payload] }
+       case 'REMOVE_FROM_CART':
+         return { ...state, cart: state.cart.filter(item => item.id !== action.payload.id) }
+       default:
+         return state
+     }
+   }
 
-## Etapa 1 — Base do projeto (sem carrinho)
+   const store = createStore(cartReducer)
+   export default store
+   ```
 
-1) Configuração do projeto com Vite + React
-2) Dependências para estado e rotas:
+3. **Provider do Redux (`src/main.jsx`)**
 
-```powershell
-npm install @reduxjs/toolkit react-redux react-router-dom
-```
+   ```js
+   import React from 'react'
+   import ReactDOM from 'react-dom/client'
+   import { Provider } from 'react-redux'
+   import store from './store'
+   import App from './App'
 
-3) Configuração do Redux (arquivo `src/store.js`)
+   ReactDOM.createRoot(document.getElementById('root')).render(
+     <Provider store={store}>
+       <App />
+     </Provider>
+   )
+   ```
 
-O projeto usa `configureStore` do RTK com um reducer simples do carrinho:
+---
+
+## Etapa 1 · Componentes base
+
+### `ProductList`
 
 ```js
-import { configureStore } from '@reduxjs/toolkit'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 
-const initialState = { cart: [] }
+const ProductList = ({ products }) => {
+  const dispatch = useDispatch()
 
-function cartReducer(state = initialState, action) {
-  switch (action.type) {
-    case 'ADD_TO_CART': {
-      const exists = state.cart.find(i => i.id === action.payload.id)
-      if (exists) {
-        return {
-          ...state,
-          cart: state.cart.map(i => (
-            i.id === action.payload.id ? { ...i, qty: (i.qty || 1) + 1 } : i
-          )),
-        }
-      }
-      return { ...state, cart: [...state.cart, { ...action.payload, qty: 1 }] }
-    }
-    case 'REMOVE_FROM_CART': {
-      const id = action.payload.id ?? action.payload
-      return { ...state, cart: state.cart.filter(item => item.id !== id) }
-    }
-    case 'DECREMENT_QTY': {
-      const id = action.payload.id ?? action.payload
-      return {
-        ...state,
-        cart: state.cart
-          .map(i => (i.id === id ? { ...i, qty: (i.qty || 1) - 1 } : i))
-          .filter(i => (i.qty || 1) > 0),
-      }
-    }
-    case 'CLEAR_CART': {
-      return { ...state, cart: [] }
-    }
-    default:
-      return state
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', payload: product })
   }
+
+  return (
+    <div>
+      {products.map(product => (
+        <div key={product.id}>
+          <h2>{product.name}</h2>
+          <button onClick={() => addToCart(product)}>Add to Cart</button>
+        </div>
+      ))}
+    </div>
+  )
 }
 
-const store = configureStore({ reducer: cartReducer })
-export default store
+export default ProductList
 ```
 
-4) Provider do Redux + React Router (resumo)
+### `Cart`
 
-O projeto envolve o `App` com `<Provider store={store}>` e usa `BrowserRouter` nas rotas (`react-router-dom@7`).
+```js
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-## Etapa 2 — Componentes e integração do carrinho
+const Cart = () => {
+  const cart = useSelector(state => state.cart)
+  const dispatch = useDispatch()
 
-1) Catálogo (`ProductList.jsx`): renderiza lista, preço e botão “Comprar” que dispara `ADD_TO_CART`.
-2) Carrinho (`Cart.jsx`): lê `cart` via `useSelector`, permite remover (`REMOVE_FROM_CART`) e decrementar (`DECREMENT_QTY`), além de limpar (`CLEAR_CART`).
-3) Rotas (`App.jsx`): define `/`, `/products`, `/cart` e links no `Header.jsx`.
+  const removeFromCart = (product) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: product })
+  }
 
-## Etapa 3 — Documentação e evidências
+  return (
+    <div>
+      <h2>Your Cart</h2>
+      {cart.map(item => (
+        <div key={item.id}>
+          <span>{item.name}</span>
+          <button onClick={() => removeFromCart(item)}>Remove</button>
+        </div>
+      ))}
+    </div>
+  )
+}
 
-Para a entrega, gere um PDF contendo:
-- Descrição do projeto e principais funcionalidades
-- Capturas de tela que comprovem:
-  1. Catálogo com lista e botão “Comprar”
-  2. Item adicionado (contador no header)
-  3. Página do carrinho com listagem
-  4. Remoção/decremento de itens
-  5. Total do carrinho atualizado
+export default Cart
+```
 
-Sugestão de estrutura do PDF: capa, sumário, arquitetura (componentes/estado), funcionalidades do carrinho (prints + descrição), conclusão (lições e próximos passos).
+### `App.jsx` (rotas básicas)
 
-### Checklist de evidências (para o PDF)
+```js
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import ProductList from './components/ProductList'
+import Cart from './components/Cart'
 
-- [ ] Catálogo visível com títulos e botões “Comprar”
-- [ ] Header com contador de itens no link “Carrinho”
-- [ ] Página “Carrinho” listando itens com imagem, nome, atributos e total por item
-- [ ] Ações funcionando: Remover, Diminuir quantidade, Esvaziar carrinho
-- [ ] Total geral do carrinho atualizado e destacado
-- [ ] Seções auxiliares (Sobre, Onde nos encontrar, Minha Conta) presentes para navegação
+const products = [
+  { id: 1, name: 'Book 1' },
+  { id: 2, name: 'Book 2' }
+]
 
-### Como rodar
+const App = () => {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" exact>
+          <ProductList products={products} />
+        </Route>
+        <Route path="/cart" component={Cart} />
+      </Switch>
+    </Router>
+  )
+}
 
-1) Instale as dependências
+export default App
+```
+
+---
+
+## Etapa 2 · Análise e melhorias de acessibilidade
+
+### 1. Auditoria inicial (Lighthouse)
+
+- Abrir a aplicação no Chrome.
+- DevTools → aba **Lighthouse** → selecionar **Accessibility** → *Generate report*.
+- Salvar o relatório para comparação posterior.
+
+### 2. Melhorias obrigatórias
+
+| Problema | Ação recomendada |
+|----------|------------------|
+| Imagens sem descrição | Garantir `alt` informativo; usar `alt=""` em imagens decorativas |
+| Hierarquia de cabeçalhos quebrada | Manter apenas um `<h1>` por página, seguir ordem `<h2>`, `<h3>` etc. |
+| Navegação por teclado deficiente | Certificar que todos os controles recebem foco e respondem a `Enter`/`Space`; ajustar `tabindex` quando necessário |
+| Elementos sem rótulo | Usar `aria-label`, `aria-live`, `aria-hidden` conforme apropriado |
+
+### 3. Testes assistivos
+
+- **NVDA** (Windows): navegar usando apenas teclado, observar leitura e anunciar ajustes.
+- Documentar todos os problemas encontrados e as correções aplicadas.
+
+### 4. Auditoria final
+
+- Reexecutar o Lighthouse.
+- Comparar métricas antes/depois.
+- Listar melhorias implementadas.
+
+---
+
+## Etapa 3 · Documentação de entrega
+
+Preparar um PDF (`SeuNome_ProjetoLivrariaOnline_Acessibilidade.pdf`) contendo:
+
+1. **Descrição do projeto**
+2. **Diagnóstico inicial**
+   - Capturas antes das correções
+   - Principais problemas encontrados
+3. **Melhorias aplicadas**
+   - Capturas após ajustes
+   - Justificativa de como cada melhoria beneficia a acessibilidade
+4. **Testes**
+   - Resultados do Lighthouse final
+   - Relato do uso de leitores de tela (NVDA)
+5. **Repositório**
+   - Link para o código no GitHub
+
+Enviar o documento finalizado pelo AVA.
+
+---
+
+## Como rodar o projeto
 
 ```powershell
 npm install
-```
-
-2) Ambiente de desenvolvimento
-
-```powershell
-npm run dev
-# abre http://localhost:5173
-```
-
-3) Build de produção
-
-```powershell
+npm run dev        # http://localhost:5173
 npm run build
-# saída em /dist
-```
-
-4) Pré-visualização do build
-
-```powershell
 npm run preview
 ```
 
-### Scripts úteis
+Scripts adicionais: `npm test`, `npm run lint`, `npm run format`.
 
-- `npm run dev` — inicia o servidor de desenvolvimento
-- `npm run build` — gera build de produção
-- `npm run preview` — serve o build localmente
-- `npm test` — executa os testes (Vitest)
-- `npm run test:watch` — testes em modo watch
-- `npm run lint` — verifica lint (ESLint)
-- `npm run lint:fix` — corrige lint automaticamente
-- `npm run format` — checa formatação (Prettier)
-- `npm run format:write` — formata arquivos com Prettier
+---
 
-### Estrutura principal
+## Estrutura sugerida
 
 ```
 public/
-  assets/css/custom.css   # estilos atuais (base, header, catálogo, pagamentos, contato)
+  assets/
+    css/
+    img/
 src/
-  App.jsx                 # layout, seções e rotas
-  main.jsx                # bootstrap React
-  store.js                # Redux store + reducers do carrinho
   components/
-    Header.jsx            # topo (links, busca, carrinho)
-    ProductList.jsx       # catálogo (10 itens padrão, preço + botão)
-    Cart.jsx              # carrinho (lista, decremento e remoção)
+    ProductList.jsx
+    Cart.jsx
+  store.js
+  App.jsx
+  main.jsx
 ```
 
-### Rotas e seções
-
-- Home/Catálogo: `/` ou `/products` → renderiza `ProductList`
-- Carrinho: `/cart` → renderiza `Cart`
-- Minha Conta (exemplo): `/conta`
-- Formas de Pagamento e Contato: seções na mesma página principal
-
-### Catálogo e preços
-
-- O catálogo padrão (10 itens) está em `src/components/ProductList.jsx` na constante `defaultProducts`.
-- Cada item tem `id`, `image` e `price`.
-- O preço é exibido abaixo da imagem e formatado em BRL.
-- O botão “Comprar” adiciona o item ao carrinho.
-
-Para trocar capas ou valores, edite `defaultProducts` ou passe `products` via props ao `ProductList`.
-
-### Formas de pagamento
-
-- Ícones/logos são renderizados em grade; tamanhos padronizados por CSS.
-- Imagens externas têm fallback SVG com texto caso falhem.
-
-### Onde nos encontrar
-
-- Seção com endereço, telefone, e-mails e horário de atendimento.
-- Mapa aponta para o SENAI CIMATEC e há link para abrir no Google Maps.
-
-### Testes
-
-```powershell
-npm test
-```
-
-Há um teste básico em `src/App.test.jsx` verificando o cabeçalho/navegação.
-
-### Qualidade de código
-
-- ESLint 9 (flat config) + Prettier 3 já configurados.
-- Ajuste as regras no `eslint.config.js` conforme necessário.
-
-### Notas
-
-- Os estilos do template original (main.css) não são mais utilizados; toda a base está em `public/assets/css/custom.css`.
-- O cabeçalho é fixo (sticky); adicionamos espaçamento para que os títulos não grudem na linha divisória entre seções.
-
-# Livraria Vite – Notas de Desenvolvimento
-
-## Modo independente (sem serviços externos)
-
-- Removemos os CDNs de Google Fonts e Font Awesome do `index.html` para que o projeto funcione offline.
-- Adicionamos mocks de API no navegador que simulam os endpoints `/api` (login, register, forgot-password, users, me, health).
-- Por padrão em desenvolvimento os mocks ficam ATIVOS via `.env.development`.
-
-### Como funciona
-- Quando `VITE_MOCK_API=true`, o app intercepta `fetch('/api/...')` no browser e responde localmente.
-- Os mocks emulam o comportamento do backend simples usado no projeto (inclui usuários demo, mensagens padrão e token base64).
-
-### Habilitar/Desabilitar mocks
-- Desenvolvimento (padrão): `VITE_MOCK_API=true` no `.env.development`.
-- Para usar o backend real, defina `VITE_MOCK_API=false` (ou remova a variável) e execute o servidor API (porta 3001). O Vite já tem proxy `/api` → `http://localhost:3001` no `vite.config.js`.
-
-### Endpoints simulados
-- POST `/api/login` → `{ success, message, token, user }` | mensagens: "Login successful! Welcome back." ou "Invalid username or password". Após 3 falhas, bloqueia (opcional).
-- POST `/api/register` → valida campos e unicidade; retorna `{ success, user }` com 201.
-- POST `/api/forgot-password` → `{ success: true, newPassword: 'newpassword' }`.
-- GET `/api/users` → lista usuários demo (username/email).
-- GET `/api/me` → requer `Authorization: Bearer <token>` do login.
-- GET `/api/health` ou `/api` → status do mock.
+As seções adicionais (Sobre, Contato, Minha Conta) permanecem para dar realismo e serão também avaliadas quanto à acessibilidade.

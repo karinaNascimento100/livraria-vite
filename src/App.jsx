@@ -1,9 +1,9 @@
 import React from 'react'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, useLocation } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store'
 import Header from './components/Header'
-import Banner from './components/Banner'
+import BannerCarousel from './components/BannerCarousel'
 import ProductList from './components/ProductList'
 import Cart from './components/Cart'
 import Contact from './components/Contact'
@@ -13,7 +13,7 @@ import AuthRegister from './components/AuthRegister'
 
 function SectionCatalog() {
   return (
-    <section id="portfolio" className="two">
+    <section id="portfolio" className="two screen">
       <div className="container">
         <header>
           <h2>Catálogo</h2>
@@ -26,11 +26,8 @@ function SectionCatalog() {
 
 function SectionCart() {
   return (
-    <section id="cart" className="two">
+    <section id="cart" className="two screen">
       <div className="container">
-        <header>
-          <h2>Carrinho</h2>
-        </header>
         <Cart />
       </div>
     </section>
@@ -39,9 +36,8 @@ function SectionCart() {
 
 function SectionConta() {
   return (
-    <section id="account" className="two">
+    <section id="account" className="two screen">
       <div className="container">
-        <header><h2>Minha Conta</h2></header>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
           <div>
             <AuthLogin />
@@ -68,24 +64,13 @@ const paymentLogos = [
 ]
 
 function AppInner() {
+  const location = useLocation()
+  const isHome = location.pathname === '/'
+
   return (
     <>
-      <Header />
-      <Banner
-        src="https://images.unsplash.com/photo-1600499373255-383d44270304?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww"
-        srcSet="
-          https://images.unsplash.com/photo-1600499373255-383d44270304?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww 600w,
-          https://images.unsplash.com/photo-1600499373255-383d44270304?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww 900w,
-          https://images.unsplash.com/photo-1600499373255-383d44270304?w=1200&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww 1200w,
-          https://images.unsplash.com/photo-1600499373255-383d44270304?w=1600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww 1600w,
-          https://images.unsplash.com/photo-1600499373255-383d44270304?w=2000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fGxpYnJhcnl8ZW58MHwwfDB8fHww 2000w
-        "
-        sizes="100vw"
-        alt="Biblioteca — Unsplash"
-        heightClass="max-h-72 md:max-h-96"
-        fit="cover"
-        position="center"
-      />
+  <Header />
+      {isHome && <BannerCarousel />}
       <div id="main">
         <Routes>
           <Route path="/" element={<SectionCatalog />} />
@@ -93,17 +78,15 @@ function AppInner() {
           <Route path="/cart" element={<SectionCart />} />
           <Route path="/conta" element={<SectionConta />} />
           <Route path="/sobre" element={
-            <section id="sobre" className="two about-theme">
+            <section id="sobre" className="two about-theme screen">
               <div className="container">
-                <header><h2>Sobre</h2></header>
                 <About includeHeading={true} />
               </div>
             </section>
           } />
           <Route path="/contato" element={
-            <section id="contato" className="two">
+            <section id="contato" className="two screen">
               <div className="container">
-                <header><h2>Onde nos encontrar</h2></header>
                 <Contact />
               </div>
             </section>

@@ -6,8 +6,11 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: #1c1c1c;
-  background: #cbb092; /* cor única (sem gradiente) */
+  /* Fundo mais claro e quente (creme) para reduzir contraste com superfícies brancas */
+  background: #f8f6e7;
 }
+/* Modo de acessibilidade: fontes maiores base */
+body.a11y-mode { font-size: 18px; line-height: 1.6; }
 h1, h2, h3, h4 { color: #1c1c1c; line-height: 1.25; margin: 0; font-weight: 700; }
 img { max-width: 100%; height: auto; display: block; }
 .container { max-width: 1080px; margin: 0 auto; padding: 0 1rem; }
@@ -33,9 +36,11 @@ img { max-width: 100%; height: auto; display: block; }
 /* New top header layout (independent from template) */
 .site-header {
   width: 100%;
-  position: sticky;
+  position: fixed !important; /* força o fixo no topo */
   top: 0;
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  z-index: 2000; /* acima de overlays do banner */
   background: #0f0f0f; /* slate-800 */
   color: #fff;
   box-shadow: 0 2px 8px rgba(12, 12, 12, 0.15);
@@ -46,7 +51,7 @@ img { max-width: 100%; height: auto; display: block; }
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem; /* header mais alto */
   max-width: 1080px;
   margin: 0 auto;
 }
@@ -88,6 +93,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .brand__title {
   font-weight: 600;
+  font-size: 1.2rem;
 }
 .nav__list {
   display: flex;
@@ -98,11 +104,19 @@ img { max-width: 100%; height: auto; display: block; }
 .nav__link {
   color: #fff !important;
   text-decoration: none;
+  font-size: 1.125rem;
 }
 .nav__link:hover,
 .nav__link[aria-current='page'] {
   text-decoration: underline;
 }
+
+/* Escalonamento adicional no modo acessível */
+.a11y-mode .site-header__inner { padding: 1rem 1.25rem; }
+.a11y-mode .brand__avatar { width: 36px; height: 36px; }
+.a11y-mode .brand__title { font-size: 1.2rem; }
+.a11y-mode .nav__link { font-size: 1.125rem; }
+.a11y-mode #main { padding-top: 96px; }
 
 /* ===== Flexbox enhancements (non-intrusive) ===== */
 /* Utilities */
@@ -259,7 +273,12 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Ensure main content isn't hidden under sticky header */
 #main {
-  padding-top: 56px; /* header height spacing */
+  padding-top: 68px; /* apenas mainbar mais alta */
+}
+
+/* Each route's main section should occupy the second screen (below banner) */
+.screen {
+  min-height: calc(100vh - 68px); /* fill viewport under sticky header */
 }
 
 /* Kill template grid offsets that cause right empty gap */
@@ -368,11 +387,11 @@ body, #main, #footer { margin-left: 0 !important; }
 .about-theme {
   /* variables for this section only */
   --bg: #efe5dc;         /* fundo geral */
-  --surface: #f7f3ee;    /* cartões (papel) levemente mais escuro */
+  --surface: #ffffff;    /* cartões mais claros para combinar com o catálogo */
   --text: #2b2b2b;       /* texto principal */
   --brand: #7a4c24;      /* marrom da marca */
   --brand-ink: #5d3a1a;  /* títulos */
-  --border: #e8e1d9;
+  --border: rgba(17, 24, 39, 0.06);
 }
 
 .about-theme .container {
@@ -386,8 +405,8 @@ body, #main, #footer { margin-left: 0 !important; }
 .about-theme .about-card{
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+  border-radius: 20px;
+  box-shadow: 0 18px 32px -18px rgba(17, 24, 39, 0.35);
 }
 
 .about-theme a { color: var(--brand-ink); opacity: .9; }
@@ -407,20 +426,20 @@ body, #main, #footer { margin-left: 0 !important; }
 
 /* ========= Reusable paper card for other pages ========= */
 .paper-card {
-  background: #f7f3ee; /* same as --surface */
-  border: 1px solid #e8e1d9;
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 18px 32px -18px rgba(17, 24, 39, 0.35);
 }
 
-/* Contact and Account forms as paper cards */
+/* Contact, Account and Cart wrappers share the same bright surface */
 .contact-wrapper,
 .account-wrapper,
-.cart-wrapper { /* cart container */
-  background: #f7f3ee;
-  border: 1px solid #e8e1d9;
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.08);
-  padding: 1rem;
+.cart-wrapper {
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 18px 32px -18px rgba(17, 24, 39, 0.35);
+  padding: 1.5rem;
 }
 

@@ -7,9 +7,9 @@ export default function Header() {
   const count = cart.reduce((acc, i) => acc + (i.qty || 1), 0)
 
   return (
-    <header className="site-header">
+    <header className="site-header" role="banner">
       {/* Barra principal: logotipo à esquerda e links à direita */}
-      <div className="site-header__inner mainbar">
+      <div className="site-header__inner mainbar" role="navigation" aria-label="principal">
         <div className="brand">
           <img
             className="brand__avatar"
@@ -21,10 +21,11 @@ export default function Header() {
               e.currentTarget.src = `data:image/svg+xml;utf8,${svg}`
             }}
           />
-          <span className="brand__title">Fullstack - Parada Obrigatória 1</span>
+          <span className="brand__title">Fullstack - Parada Obrigatória 2</span>
         </div>
         <nav aria-label="links" className="nav">
           <ul className="nav__list">
+            <li><NavLink to="/" className="nav__link">Início</NavLink></li>
             <li><NavLink to="/sobre" className="nav__link">Sobre</NavLink></li>
             <li><NavLink to="/contato" className="nav__link">Contato</NavLink></li>
             <li><NavLink to="/conta" className="nav__link">Minha Conta</NavLink></li>
