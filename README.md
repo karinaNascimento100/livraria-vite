@@ -85,4 +85,3 @@ npm test        # executa testes (se existirem)
 
 ---
 
-Se quiser, eu posso também gerar um trecho de script para popular `localStorage` com exemplos de favoritos para testar rapidamente.
