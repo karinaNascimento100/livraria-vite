@@ -6,21 +6,21 @@ require('dotenv').config({ path: path.join(__dirname, 'config.env') });
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// Middlewares (cors, parsing de JSON/URL-encoded e arquivos estáticos)
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes (API)
+// Rotas da API
 app.use('/api', require('./controllers/apiController'));
 
-// Root (JSON to avoid second web site feel)
+// Raiz: resposta JSON (evita servir outra página web na mesma porta)
 app.get('/', (req, res) => {
   res.json({ ok: true, name: 'Livraria API', version: '1.0.0', docs: '/api/health' })
 });
 
-// Error handling middleware
+// Middleware de tratamento de erros
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err.stack);

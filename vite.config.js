@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { fileURLToPath, URL } from 'node:url'
 
-// https://vitejs.dev/config/
+// Configuração do Vite — documentação: https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -24,6 +24,7 @@ export default defineConfig({
     setupFiles: ['./src/setupTests.js'],
     globals: true,
   },
+  // Exemplos comentados de configuração opcional
   // server: {
   //   proxy: {
   //     '/api': {

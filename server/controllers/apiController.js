@@ -6,7 +6,7 @@ const ApiService = require('../services/apiService');
 const userModel = new UserModel();
 const apiService = new ApiService(userModel);
 
-// Simple auth middleware for Bearer token
+// Middleware de autenticação simples para token Bearer
 function authMiddleware(req, res, next) {
   const auth = req.headers.authorization || ''
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null
@@ -17,7 +17,7 @@ function authMiddleware(req, res, next) {
   next()
 }
 
-// Register endpoint
+// Endpoint: registro de usuário
 router.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body
@@ -30,12 +30,12 @@ router.post('/register', (req, res) => {
   }
 })
 
-// Login endpoint
+// Endpoint: login
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate input data
+  // Validar dados de entrada
     const validation = userModel.validateLoginData(username, password);
     if (!validation.isValid) {
       return res.status(400).json({
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Call service (could be external API)
+  // Chamar serviço (pode ser uma API externa)
     const result = await apiService.login(username, password);
 
     if (result.success) {
@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Example protected route to get current user info
+// Exemplo de rota protegida que retorna informações do usuário atual
 router.get('/me', authMiddleware, (req, res) => {
   const user = userModel.getUserByUsername(req.user?.sub)
   if (!user) return res.status(404).json({ success: false, message: 'User not found' })
@@ -78,12 +78,12 @@ router.get('/me', authMiddleware, (req, res) => {
   res.json({ success: true, data: safe })
 })
 
-// Forgot password endpoint
+// Endpoint: esqueci a senha (reset)
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
 
-    // Validate email
+  // Validar email
     const validation = userModel.validateEmail(email);
     if (!validation.isValid) {
       return res.status(400).json({
@@ -92,7 +92,7 @@ router.post('/forgot-password', async (req, res) => {
       });
     }
 
-    // Call service (could be external API)
+  // Chamar serviço (pode ser uma API externa)
     const result = await apiService.forgotPassword(email);
 
     if (result.success) {
@@ -118,7 +118,7 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
-// API health check endpoint
+// Endpoint de verificação de saúde da API (health check)
 router.get('/health', async (req, res) => {
   try {
     const result = await apiService.checkApiHealth();
@@ -136,7 +136,7 @@ router.get('/health', async (req, res) => {
   }
 });
 
-// Get available users (for demo purposes)
+// Obter usuários disponíveis (apenas para demonstração)
 router.get('/users', (req, res) => {
   try {
     const users = userModel.getAllUsers();

@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+/*
+  ProductList
+  - Lista de produtos mostrada no catálogo.
+  - Suporta adicionar ao carrinho e favoritar (usa ações da store: ADD_TO_CART, ADD_FAVORITE, REMOVE_FAVORITE).
+  - Comentários abaixo explicam decisões de formatação de preços e paginação.
+*/
 
 const defaultProducts = [
   {
@@ -42,6 +49,14 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
     dispatch({ type: 'ADD_TO_CART', payload: { ...p, price: priceSafe } })
   }
 
+  // Favoritos: leitura direta da store. toggleFavorite adiciona/remover conforme estado atual.
+  const favorites = useSelector(s => s.favorites || [])
+  const isFavorited = (id) => favorites.find(f => f.id === id)
+  const toggleFavorite = (p) => {
+    if (isFavorited(p.id)) dispatch({ type: 'REMOVE_FAVORITE', payload: { id: p.id } })
+    else dispatch({ type: 'ADD_FAVORITE', payload: p })
+  }
+
   const formatBRL = (n) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n || 0)
 
   // cria um preço "de" para exibir a economia (aprox. 20-35% off)
@@ -51,7 +66,7 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
     return Math.round(price * factor * 100) / 100
   }
 
-  // Paginação em carrossel (3 por página por padrão)
+  // Paginação em carrossel (4 por página por padrão)
   const pages = useMemo(() => {
     if (!Array.isArray(filtered) || filtered.length === 0) return []
     const out = []
@@ -174,11 +189,12 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
                               </button>
                             <button
                               type="button"
-                              className="ml-1 inline-flex items-center justify-center rounded-full border border-slate-300 text-slate-600 hover:text-slate-800 hover:border-slate-400 h-11 w-11 p-0 text-xl bg-stone-200/70 hover:bg-stone-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
+                              className={`ml-1 inline-flex items-center justify-center rounded-full border h-11 w-11 p-0 text-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 ${isFavorited(p.id) ? 'bg-red-600 text-white border-red-700' : 'border border-slate-300 text-slate-600 hover:text-slate-800 hover:border-slate-400 bg-stone-200/70 hover:bg-stone-200'}`}
                               title="Favoritar"
                               aria-label="Favoritar"
+                              onClick={() => toggleFavorite(p)}
                             >
-                              ♥
+                              {isFavorited(p.id) ? '♥' : '♡'}
                             </button>
                           </div>
                         </article>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 
-// util: gera srcSet com 3 larguras comuns (funciona bem com Unsplash)
+/*
+  BannerCarousel
+  - Componente de carrossel de banners usado na página inicial.
+  - Aceita um array `slides` com objetos { src, alt, bg, fit, position, srcSet, fallbackSrc }.
+  - Suporta autoplay, navegação por teclado, swipe em dispositivos móveis
+  - Observações para quem clonar: coloque assets públicos em `/public/assets/...` e referencie-os como `/assets/...`.
+*/
+
 function makeSrcSet(url) {
   const sep = url.includes('?') ? '&' : '?'
   const u = (w, q = 80) => `${url}${sep}w=${w}&auto=format&fit=crop&q=${q}`
@@ -9,7 +16,7 @@ function makeSrcSet(url) {
 
 export default function BannerCarousel({
   slides,
-  // Preenche a primeira tela: altura = viewport - altura do header (68px)
+
   heightClass = 'min-h-[calc(100vh-68px)] h-[calc(100vh-68px)]',
   autoPlay = true,
   intervalMs = 6000,
@@ -20,12 +27,10 @@ export default function BannerCarousel({
   position = 'center center',
   maxWidth,
 }) {
-  // slides HD por padrão (tema biblioteca/azulado)
+
   const defaultSlides = [
-    { src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66', alt: 'Modern library hall', bg: '#0a2236' },
-  // Slide 2: imagem remota (corrigido fechamento de string)
-  { src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmlibGlvdGVjYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600', alt: 'Library shelves new', bg: '#0a2236', fallbackSrc: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f' },
-    { src: 'https://images.unsplash.com/photo-1588580000645-4562a6d2c839?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmlibGlvdGVjYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=600', alt: 'Study desks and lamps', bg: '#0a2a4a' },
+  { src: '/assets/img/banner/Gemini_Generated_Image_5ppx1f5ppx1f5ppx.PNG', alt: 'Esquenta Black Friday 2', bg: '#0a2236', fallbackSrc: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f' },
+  { src: '/assets/img/banner/Gemini_Generated_Image_b3s4hxb3s4hxb3s4.png', alt: 'Esquenta Black Friday', bg: '#0b0710', fit: 'contain', position: 'center 70%' },
   ]
 
   const slidesList = (slides && slides.length ? slides : defaultSlides).map(s => {
@@ -36,6 +41,7 @@ export default function BannerCarousel({
     }
   })
 
+  // state to track quais imagens já terminaram de carregar (para exibir skeleton enquanto isso)
   const [index, setIndex] = useState(0)
   const [loaded, setLoaded] = useState(() => Array(slidesList.length).fill(false))
   const total = slidesList.length
@@ -68,16 +74,19 @@ export default function BannerCarousel({
     return clearTimer
   }, [index, autoPlay, intervalMs, total, clearTimer])
 
-  // pré-carrega o primeiro banner (para evitar flash em telas grandes)
+
   useEffect(() => {
     const img = new Image()
     const first = slidesList[0]
     img.src = `${first.src}?w=1920&auto=format&fit=crop&q=80`
+    // Explicação: desativamos aqui a checagem de dependências do hook porque
+    // queremos executar este preload apenas na montagem inicial do componente.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // swipe
+
   const startX = useRef(0)
+  // touch handlers: start/end detectam swipe horizontal para navegação
   const onTouchStart = (e) => { startX.current = e.touches[0].clientX }
   const onTouchEnd = (e) => {
     const dx = e.changedTouches[0].clientX - startX.current
@@ -106,7 +115,7 @@ export default function BannerCarousel({
       onTouchEnd={onTouchEnd}
       style={maxWidth ? { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth, marginInline: 'auto' } : undefined}
     >
-      {/* trilho */}
+      {/* trilho: container deslizante com cada slide ocupando 100% da largura */}
       <div
         ref={trackRef}
         className="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
@@ -115,13 +124,18 @@ export default function BannerCarousel({
         {slidesList.map((s, i) => {
           const isCover = (s.fit ?? fit) === 'cover'
           const bg = s.bg ?? '#0c1a2b'
+          // decide se este slide deve ter overlay mais suave (por exemplo para imagens geradas)
+          const skipOverlay = String(s.src).includes('Gemini_Generated') || String(s.src).includes('Black_Friday')
+          const overlayStyle = skipOverlay
+            ? { background: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.16) 100%)' }
+            : { background: 'linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.35) 100%)' }
+
           return (
             <div key={i} className="min-w-full h-full relative" style={{ background: bg }}>
-              {/* skeleton enquanto carrega */}
+              {/* skeleton exibido enquanto a imagem do slide não carregou */}
               {!loaded[i] && (
                 <div className="absolute inset-0 animate-pulse" style={{ background: bg }} />
               )}
-
               <img
                 src={/^https?:/.test(s.src) ? `${s.src}${s.src.includes('?') ? '&' : '?'}w=1920&auto=format&fit=crop&q=80` : s.src}
                 srcSet={/^https?:/.test(s.src) ? (s.srcSet ?? makeSrcSet(s.src)) : s.srcSet}
@@ -141,8 +155,18 @@ export default function BannerCarousel({
                 }}
               />
 
-              {/* overlay para contraste */}
-              <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.35) 100%)' }} />
+              {/* Badge (ex.: Black Friday) — posicionado para ficar visível acima da imagem */}
+              {String(s.src).includes('Black_Friday') && (
+                <div className="absolute top-6 right-6 z-30 pointer-events-none">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center text-white font-bold text-center" style={{ background: 'linear-gradient(135deg,#10b981,#6366f1)', boxShadow: '0 6px 18px rgba(0,0,0,0.45)' }} aria-hidden="true">
+                    <div className="text-[10px] md:text-xs">ATÉ</div>
+                    <div className="text-sm md:text-lg">70%</div>
+                  </div>
+                </div>
+              )}
+
+              {/* overlay para contraste entre imagem e conteúdo textual — estilo ajustado por slide */}
+              <div className="pointer-events-none absolute inset-0" style={overlayStyle} />
             </div>
           )
         })}

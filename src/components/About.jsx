@@ -1,18 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-/**
- * About component (reusable)
- * Props:
- * - title?: string (section title displayed above content if includeHeading)
- * - intro?: string (intro paragraph)
- * - paragraphs?: string[] (extra paragraphs)
- * - items?: string[] (bullet list)
- * - heroImage?: string (optional header image URL)
- * - heroAlt?: string (alt text for hero image)
- * - includeHeading?: boolean (renders an internal H1, default false to avoid duplicate section titles)
- * - backTo?: string (route path for back link, default '/')
- */
 export default function About({
   title = 'Sobre Nós: Conectando Mundos através da Tecnologia e da Leitura',
   intro = 'Bem-vindo à nossa livraria! Mais do que uma simples loja de livros, este é um projeto nascido da intersecção entre duas grandes paixões: a literatura, que expande nossos horizontes, e a tecnologia, que constrói o futuro.',

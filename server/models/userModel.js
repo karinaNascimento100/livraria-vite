@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 class UserModel {
   constructor() {
     this.users = [
-      // seed users with hashed password 'password123'
+  // usuários iniciais (seed) com senha 'password123' hashed (apenas para demo)
       { username: 'alice', password: bcrypt.hashSync('password123', 10), email: 'alice@example.com' },
       { username: 'bob', password: bcrypt.hashSync('password123', 10), email: 'bob@example.com' },
       { username: 'charlie', password: bcrypt.hashSync('password123', 10), email: 'charlie@example.com' },
@@ -52,7 +52,7 @@ class UserModel {
   const hashed = bcrypt.hashSync(password, 10)
   const user = { username, email, password: hashed }
   this.users.push(user)
-  // Return without password
+  // Retornar usuário sem o campo de senha
   const safeUser = { ...user }
   delete safeUser.password
   return { ok: true, user: safeUser }

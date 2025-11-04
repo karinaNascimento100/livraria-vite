@@ -6,11 +6,20 @@ import Header from './components/Header'
 import BannerCarousel from './components/BannerCarousel'
 import ProductList from './components/ProductList'
 import Cart from './components/Cart'
+import Favorites from './components/Favorites'
 import Contact from './components/Contact'
 import About from './components/About'
 import AuthLogin from './components/AuthLogin'
 import AuthRegister from './components/AuthRegister'
 
+/*
+  App.jsx
+  - Roteamento e composição de páginas.
+  - Mantém a store Redux via <Provider> e registra rotas principais: catálogo, carrinho e favoritos.
+  - Nota para quem clonar:
+    * Rode `npm install` e `npm run dev`.
+    * A rota `/favorites` exibe os itens favoritados e permite movê-los para o carrinho.
+*/
 function SectionCatalog() {
   return (
     <section id="portfolio" className="two screen">
@@ -70,12 +79,13 @@ function AppInner() {
   return (
     <>
   <Header />
-      {isHome && <BannerCarousel />}
+  {isHome && <BannerCarousel maxWidth={2000} heightClass="min-h-[520px] h-[520px]" />}
       <div id="main">
         <Routes>
           <Route path="/" element={<SectionCatalog />} />
           <Route path="/products" element={<SectionCatalog />} />
           <Route path="/cart" element={<SectionCart />} />
+          <Route path="/favorites" element={<section id="favorites" className="two screen"><div className="container"><Favorites /></div></section>} />
           <Route path="/conta" element={<SectionConta />} />
           <Route path="/sobre" element={
             <section id="sobre" className="two about-theme screen">

@@ -1,4 +1,4 @@
-/* ===== Minimal base (replaces template main.css need) ===== */
+/* ===== Base mínima (substitui parte necessária do main.css do template) ===== */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
@@ -28,12 +28,12 @@ img { max-width: 100%; height: auto; display: block; }
 .button.alt { background: #374151; }
 .button.alt:hover { background: #1f2937; }
 
-/* Completely neutralize the original sidebar (#header) */
+/* Neutraliza completamente a sidebar original (#header) */
 #header {
   display: none !important;
 }
 
-/* New top header layout (independent from template) */
+/* Novo layout de cabeçalho superior (independente do template) */
 .site-header {
   width: 100%;
   position: fixed !important; /* força o fixo no topo */
@@ -56,9 +56,9 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0 auto;
 }
 .mainbar { border-top: 1px solid rgba(255,255,255,0.08); }
-/* nav on the right */
 .mainbar .nav { margin-left: auto; }
 .mainbar .nav__list { align-items: center; }
+/* navegação alinhada à direita */
 .search {
   flex: 1 1 40%;
   display: flex;
@@ -88,8 +88,8 @@ img { max-width: 100%; height: auto; display: block; }
   width: 32px;
   height: 32px;
   border-radius: 9999px;
-  background: #fff; /* ensure contrast on dark header */
-  box-shadow: 0 0 0 2px #fff; /* thin white ring */
+  background: #fff; /* garantir contraste no cabeçalho escuro */
+  box-shadow: 0 0 0 2px #fff; /* anel branco fino */
 }
 .brand__title {
   font-weight: 600;
@@ -163,7 +163,7 @@ img { max-width: 100%; height: auto; display: block; }
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem; /* space between cards */
+  gap: 2rem; /* espaçamento entre cartões */
 }
 
 /* Five columns on desktop */
@@ -172,7 +172,7 @@ img { max-width: 100%; height: auto; display: block; }
   max-width: calc(20% - 2rem);
 }
 
-/* Optional legacy three-column helper (kept for compatibility) */
+/* Helper legado opcional de três colunas (mantido para compatibilidade) */
 .col-4 {
   flex: 1 1 calc(33.333% - 2rem);
   max-width: calc(33.333% - 2rem);
@@ -243,7 +243,7 @@ img { max-width: 100%; height: auto; display: block; }
   margin-top: 0.5rem;
 }
 .button-sm {
-  padding: 0.4rem 0.75rem !important; /* slightly bigger for better tap target */
+  padding: 0.4rem 0.75rem !important; /* leve aumento para melhorar alvos de toque */
   font-size: 0.9rem !important;
   line-height: 1.2 !important;
 }
@@ -265,26 +265,26 @@ img { max-width: 100%; height: auto; display: block; }
 /* Divider between sections (except the first hero) */
 #main > section + section {
   border-top: 1px solid rgba(47, 79, 79, 0.25);
-  padding-top: 1rem; /* add space so header/title isn't glued to the line */
+  padding-top: 1rem; /* adiciona espaço para que o título não fique colado */
 }
 
 /* Center hero header as well */
 #main > section.cover header { text-align: center; }
 
-/* Ensure main content isn't hidden under sticky header */
+/* Garantir que o conteúdo principal não fique escondido sob o cabeçalho fixo */
 #main {
   padding-top: 68px; /* apenas mainbar mais alta */
 }
 
 /* Each route's main section should occupy the second screen (below banner) */
 .screen {
-  min-height: calc(100vh - 68px); /* fill viewport under sticky header */
+  min-height: calc(100vh - 68px); /* preencher a viewport abaixo do cabeçalho fixo */
 }
 
 /* Kill template grid offsets that cause right empty gap */
 .row > *[class*='-offset-'] { margin-left: 0 !important; }
 
-/* Ensure body/content fills full width under our layout */
+/* Garantir que o body/conteúdo ocupe largura total no nosso layout */
 body, #main, #footer { margin-left: 0 !important; }
 #main { width: 100% !important; }
 
@@ -345,9 +345,9 @@ body, #main, #footer { margin-left: 0 !important; }
 .h-scroll {
   overflow-x: auto;
   overflow-y: visible;
-  scroll-snap-type: x mandatory; /* snap to cards */
+  scroll-snap-type: x mandatory; /* alinhamento (snap) nos cartões */
   -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable; /* keep layout stable when scrollbar shows */
+  scrollbar-gutter: stable; /* manter layout estável quando a barra de rolagem aparecer */
 }
 
 /* Use nowrap flow when scroller is active */
@@ -355,7 +355,7 @@ body, #main, #footer { margin-left: 0 !important; }
   flex-wrap: nowrap;
 }
 
-/* Each child (card column) snaps to start */
+/* Cada filho (coluna de cartão) alinha no início (snap) */
 .h-scroll .snap-start { scroll-snap-align: start; }
 
 /* Card min-width to create visible slides on narrow screens */
@@ -412,7 +412,7 @@ body, #main, #footer { margin-left: 0 !important; }
 .about-theme a { color: var(--brand-ink); opacity: .9; }
 .about-theme a:hover { opacity: 1; }
 
-/* Optional: soften pure white buttons inside about */
+/* Opcional: suavizar botões totalmente brancos na seção 'about' */
 .about-theme .button--light{ background:#fff; filter:brightness(.98); }
 
 /* Variant: no card (text directly on page) */
