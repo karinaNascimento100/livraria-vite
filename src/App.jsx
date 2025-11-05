@@ -7,7 +7,9 @@ import BannerCarousel from './components/BannerCarousel'
 import ProductList from './components/ProductList'
 import Cart from './components/Cart'
 import Favorites from './components/Favorites'
+import LiveAnnouncer from './components/LiveAnnouncer'
 import Contact from './components/Contact'
+import MapOnly from './components/MapOnly'
 import About from './components/About'
 import AuthLogin from './components/AuthLogin'
 import AuthRegister from './components/AuthRegister'
@@ -25,6 +27,8 @@ function SectionCatalog() {
     <section id="portfolio" className="two screen">
       <div className="container">
         <header>
+          {/* Título semântico para leitores de tela (visualmente oculto) */}
+          <h1 className="sr-only">Catálogo de livros</h1>
           <h2>Catálogo</h2>
         </header>
         <ProductList />
@@ -37,6 +41,8 @@ function SectionCart() {
   return (
     <section id="cart" className="two screen">
       <div className="container">
+        {/* Título semântico para leitores de tela (visualmente oculto) */}
+        <h1 className="sr-only">Carrinho de compras</h1>
         <Cart />
       </div>
     </section>
@@ -63,13 +69,13 @@ function SectionConta() {
 // Catálogo padrão: 10 itens definidos em ProductList (imagens e preços)
 
 const paymentLogos = [
-  { name: 'Visa', src: 'https://leitura.com.br/app/cielo/images/visa.gif' },
-  { name: 'Mastercard', src: 'https://leitura.com.br/app/cielo/images/mastercard.gif' },
-  { name: 'American Express', src: 'https://leitura.com.br/app/cielo/images/amex.gif' },
-  { name: 'Diners', src: 'https://leitura.com.br/app/cielo/images/diners.gif' },
-  { name: 'Pix', src: 'https://static.estantevirtual.com.br/bnn/l_estantevirtual/2025-07-15/3688_pix.svg' },
-  { name: 'Hipercard', src: 'https://leitura.com.br/app/cielo/images/hipercard.gif' },
-  { name: 'Boleto', src: 'https://leitura.com.br/app/cielo/images/boleto.png' },
+  { name: 'Visa', local: '/assets/img/payments/visa.gif', fallback: 'https://leitura.com.br/app/cielo/images/visa.gif' },
+  { name: 'Mastercard', local: '/assets/img/payments/mastercard.gif', fallback: 'https://leitura.com.br/app/cielo/images/mastercard.gif' },
+  { name: 'American Express', local: '/assets/img/payments/amex.gif', fallback: 'https://leitura.com.br/app/cielo/images/amex.gif' },
+  { name: 'Diners', local: '/assets/img/payments/diners.gif', fallback: 'https://leitura.com.br/app/cielo/images/diners.gif' },
+  { name: 'Pix', local: '/assets/img/payments/pix.png', fallback: 'https://static.estantevirtual.com.br/bnn/l_estantevirtual/2025-07-15/3688_pix.svg' },
+  { name: 'Hipercard', local: '/assets/img/payments/hipercard.gif', fallback: 'https://leitura.com.br/app/cielo/images/hipercard.gif' },
+  { name: 'Boleto', local: '/assets/img/payments/boleto.png', fallback: 'https://leitura.com.br/app/cielo/images/boleto.png' },
 ]
 
 function AppInner() {
@@ -79,6 +85,8 @@ function AppInner() {
   return (
     <>
   <Header />
+  {/* Região invisível para anúncios a leitores de tela (aria-live) */}
+  <LiveAnnouncer />
   {isHome && <BannerCarousel maxWidth={2000} heightClass="min-h-[520px] h-[520px]" />}
       <div id="main">
         <Routes>
@@ -101,6 +109,13 @@ function AppInner() {
               </div>
             </section>
           } />
+          <Route path="/map" element={
+            <section id="map" className="two screen">
+              <div className="container">
+                <MapOnly />
+              </div>
+            </section>
+          } />
         </Routes>
         <section id="about" className="three">
           <div className="container">
@@ -111,9 +126,18 @@ function AppInner() {
               {paymentLogos.map(p => (
                 <li key={p.name}>
                   <img
-                    src={p.src}
+                    src={p.local || p.fallback}
                     alt={p.name}
                     onError={(e) => {
+                      try {
+                        // if we failed to load the local, try the fallback remote URL once
+                        if (p.fallback && e.currentTarget.src !== p.fallback) {
+                          e.currentTarget.src = p.fallback
+                          return
+                        }
+                      } catch {
+                        // ignore and continue to placeholder
+                      }
                       const text = encodeURIComponent(p.name)
                       const svg = `<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 80'><rect width='100%' height='100%' fill='#111'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#e5e7eb' font-family='Arial, sans-serif' font-size='22'>${text}</text></svg>`
                       e.currentTarget.src = `data:image/svg+xml;utf8,${svg}`

@@ -29,8 +29,8 @@ export default function BannerCarousel({
 }) {
 
   const defaultSlides = [
-  { src: '/assets/img/banner/Gemini_Generated_Image_5ppx1f5ppx1f5ppx.PNG', alt: 'Esquenta Black Friday 2', bg: '#0a2236', fallbackSrc: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f' },
-  { src: '/assets/img/banner/Gemini_Generated_Image_b3s4hxb3s4hxb3s4.png', alt: 'Esquenta Black Friday', bg: '#0b0710', fit: 'contain', position: 'center 70%' },
+  { src: '/assets/img/banner/Gemini_Generated_Image_5ppx1f5ppx1f5ppx.PNG', alt: 'Ilustração de um livro aberto com luzes neon sobre uma placa de circuito, simbolizando tecnologia e conhecimento digital.', bg: '#0a2236', fallbackSrc: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f' },
+  { src: '/assets/img/banner/Gemini_Generated_Image_b3s4hxb3s4hxb3s4.png', alt: 'Esquenta Black Friday — texto dourado sobre fundo escuro com partículas coloridas e cubos dourados.', bg: '#0b0710', fit: 'contain', position: 'center 70%' },
   ]
 
   const slidesList = (slides && slides.length ? slides : defaultSlides).map(s => {
@@ -46,6 +46,7 @@ export default function BannerCarousel({
   const [loaded, setLoaded] = useState(() => Array(slidesList.length).fill(false))
   const total = slidesList.length
   const trackRef = useRef(null)
+  const trackId = useRef(`banner-track-${Math.random().toString(36).slice(2,8)}`)
   const timerRef = useRef(null)
   const isHoveringRef = useRef(false)
   const isFocusedRef = useRef(false)
@@ -117,6 +118,7 @@ export default function BannerCarousel({
     >
       {/* trilho: container deslizante com cada slide ocupando 100% da largura */}
       <div
+        id={trackId.current}
         ref={trackRef}
         className="absolute inset-0 flex transition-transform duration-500 ease-out will-change-transform"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -141,6 +143,7 @@ export default function BannerCarousel({
                 srcSet={/^https?:/.test(s.src) ? (s.srcSet ?? makeSrcSet(s.src)) : s.srcSet}
                 sizes="(max-width: 768px) 100vw, 1920px"
                 alt={s.alt ?? `Banner ${i + 1}`}
+                aria-describedby={`banner-desc-${i}`}
                 className={`w-full h-full ${isCover ? 'object-cover' : 'object-contain'} select-none`}
                 style={{ objectPosition: s.position ?? position }}
                 loading={i === 0 ? 'eager' : 'lazy'}
@@ -154,6 +157,11 @@ export default function BannerCarousel({
                   }
                 }}
               />
+
+              {/* Descrição adicional para leitores de tela */}
+              <span id={`banner-desc-${i}`} className="sr-only">
+                {s.alt ?? `Figura ${i + 1}: banner promocional`}
+              </span>
 
               {/* Badge (ex.: Black Friday) — posicionado para ficar visível acima da imagem */}
               {String(s.src).includes('Black_Friday') && (
@@ -177,12 +185,14 @@ export default function BannerCarousel({
         <>
           <button
             onClick={prev}
-            aria-label="Anterior"
+            aria-label="Anterior do carrossel"
+            aria-controls={trackId.current}
             className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full opacity-0 hover:opacity-100 focus:opacity-100 transition"
           >‹</button>
           <button
             onClick={next}
-            aria-label="Próximo"
+            aria-label="Próximo do carrossel"
+            aria-controls={trackId.current}
             className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full opacity-0 hover:opacity-100 focus:opacity-100 transition"
           >›</button>
         </>

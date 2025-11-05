@@ -1,6 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { announce } from './LiveAnnouncer'
+
+// helper para chamar announce() com segurança (evita duplicação e errors em ambientes sem announcer)
+const safeAnnounce = (msg) => {
+  try {
+    announce(msg)
+  } catch {
+    /* noop - announcer pode não estar disponível */
+  }
+}
 
 /*
   ProductList
@@ -13,7 +23,7 @@ const defaultProducts = [
   {
     id: 1,
     name: 'HTML & CSS',
-    image: 'https://leitura.com.br/image/cache/products/9788539648542-228x228.jpg',
+    image: '/assets/img/books/9788539648542-228x228.jpg',
     price: 35.0,
     seller: 'Sebo Abbondanza',
     isbn: '9788570015587',
@@ -22,15 +32,15 @@ const defaultProducts = [
     weight: '850g',
     language: 'Português',
   },
-  { id: 2,  name: 'Primeiros Passos com React', image: 'https://leitura.com.br/image/cache/products/9788575225202-228x228.jpg', price: 99.9, seller: 'Livraria Online' },
-  { id: 3,  name: 'Programação WEB com Node e Express', image: 'https://leitura.com.br/image/cache/products/9786586057089-228x228.jpg', price: 139.9, seller: 'Livraria Online' },
-  { id: 4,  name: 'Programação em HTML5', image: 'https://leitura.com.br/image/cache/products/9788576088455-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
-  { id: 5,  name: 'Programação Profissional em HTML5', image: 'https://leitura.com.br/image/cache/products/9788576087441-228x228.jpg', price: 79.9, seller: 'Livraria Online' },
-  { id: 6,  name: 'Logica de Programação e Estrutura de Dados', image: 'https://leitura.com.br/image/cache/products/9788543019147-228x228.jpg', price: 119.9, seller: 'Livraria Online' },
-  { id: 7,  name: 'Logica de Programação e Algoritmos com Javascript', image: 'https://leitura.com.br/image/cache/products/9788575226568-228x228.jpg', price: 109.9, seller: 'Livraria Online' },
-  { id: 8,  name: 'Introdução a Programação', image: 'https://leitura.com.br/image/cache/products/9788535210194-228x228.jpg', price: 149.9, seller: 'Livraria Online' },
-  { id: 9,  name: 'Fundamentos de Programação', image: 'https://leitura.com.br/image/cache/products/9788586804960-228x228.jpg', price: 94.9, seller: 'Livraria Online' },
-  { id: 10, name: 'React Aprenda Praticando', image: 'https://leitura.com.br/image/cache/products/9786586057393-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
+  { id: 2,  name: 'Primeiros Passos com React', image: '/assets/img/books/9788575225202-228x228.jpg', price: 99.9, seller: 'Livraria Online' },
+  { id: 3,  name: 'Programação WEB com Node e Express', image: '/assets/img/books/9786586057089-228x228.jpg', price: 139.9, seller: 'Livraria Online' },
+  { id: 4,  name: 'Programação em HTML5', image: '/assets/img/books/9788576088455-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
+  { id: 5,  name: 'Programação Profissional em HTML5', image: '/assets/img/books/9788576087441-228x228.jpg', price: 79.9, seller: 'Livraria Online' },
+  { id: 6,  name: 'Logica de Programação e Estrutura de Dados', image: '/assets/img/books/9788543019147-228x228.jpg', price: 119.9, seller: 'Livraria Online' },
+  { id: 7,  name: 'Logica de Programação e Algoritmos com Javascript', image: '/assets/img/books/9788575226568-228x228.jpg', price: 109.9, seller: 'Livraria Online' },
+  { id: 8,  name: 'Introdução a Programação', image: '/assets/img/books/9788535210194-228x228.jpg', price: 149.9, seller: 'Livraria Online' },
+  { id: 9,  name: 'Fundamentos de Programação', image: '/assets/img/books/9788586804960-228x228.jpg', price: 94.9, seller: 'Livraria Online' },
+  { id: 10, name: 'React Aprenda Praticando', image: '/assets/img/books/9786586057393-228x228.jpg', price: 89.9, seller: 'Livraria Online' },
 ]
 
 export default function ProductList({ products = defaultProducts, pageSize = 3, autoplayMs = 4500 }) {
@@ -47,23 +57,38 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
     // Garantia de preço numérico (fallback 0)
     const priceSafe = typeof p.price === 'number' ? p.price : 0
     dispatch({ type: 'ADD_TO_CART', payload: { ...p, price: priceSafe } })
+    // Anúncio para leitores de tela (não altera a interface visual)
+    try {
+      announce(`${p.name || 'Item'} adicionado ao carrinho`)
+    } catch { /* noop - falha não-crítica do announcer */ }
   }
 
   // Favoritos: leitura direta da store. toggleFavorite adiciona/remover conforme estado atual.
   const favorites = useSelector(s => s.favorites || [])
   const isFavorited = (id) => favorites.find(f => f.id === id)
   const toggleFavorite = (p) => {
-    if (isFavorited(p.id)) dispatch({ type: 'REMOVE_FAVORITE', payload: { id: p.id } })
-    else dispatch({ type: 'ADD_FAVORITE', payload: p })
+    if (isFavorited(p.id)) {
+      dispatch({ type: 'REMOVE_FAVORITE', payload: { id: p.id } })
+      try { announce(`${p.name || 'Item'} removido dos favoritos`) } catch { /* noop - announcer pode não estar disponível */ }
+    } else {
+      dispatch({ type: 'ADD_FAVORITE', payload: p })
+      try { announce(`${p.name || 'Item'} adicionado aos favoritos`) } catch { /* noop - announcer pode não estar disponível */ }
+    }
   }
 
   const formatBRL = (n) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n || 0)
 
-  // cria um preço "de" para exibir a economia (aprox. 20-35% off)
+  // cria um preço "de" para exibir a economia usando percentuais inteiros
+  // Evita percentuais fracionados: escolhemos determinísticamente entre alguns percentuais inteiros.
   const makeCompareAt = (price) => {
     if (typeof price !== 'number' || !isFinite(price)) return null
-    const factor = 1 + 0.2 + (Math.abs(((price * 1000) % 1500)) / 10000) // ~20% a ~35%
-    return Math.round(price * factor * 100) / 100
+    // porcentagens inteiras predefinidas (em %)
+    const discounts = [10, 15, 20, 35]
+    // índice determinístico baseado no preço para manter consistência entre execuções
+    const idx = Math.floor(price) % discounts.length
+    const pct = discounts[idx]
+    const compareAt = price / (1 - pct / 100)
+    return Math.round(compareAt * 100) / 100
   }
 
   // Paginação em carrossel (4 por página por padrão)
@@ -126,6 +151,14 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
                       const discount = compareAt ? Math.max(0, Math.round(100 - (price / compareAt) * 100)) : 0
                       // índice absoluto para badge de ranking
                       const absoluteIndex = gi * pageSize + idx
+                      // mensagens curtas pré-computadas para evitar JSX/confusão com template literals inline
+                      const favTextFocus = isFavorited(p.id)
+                        ? `${p.name || 'Item'} removido dos favoritos (pressione Enter para confirmar)`
+                        : `${p.name || 'Item'} adicionado aos favoritos (pressione Enter para confirmar)`
+                      const favTextHover = isFavorited(p.id)
+                        ? `${p.name || 'Item'} já está nos favoritos`
+                        : `${p.name || 'Item'} adicionar aos favoritos`
+
                       return (
                         <article
                           key={p.id}
@@ -182,6 +215,7 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
                                 type="button"
                                 className="button w-full flex items-center justify-center gap-2 text-base"
                                 aria-label={`Adicionar ${(p.name || 'livro')} ao carrinho`}
+                                title={`Adicionar ${(p.name || 'livro')} ao carrinho`}
                                 onClick={() => addToCart(p)}
                               >
                                 <span aria-hidden>🛒</span>
@@ -190,10 +224,15 @@ export default function ProductList({ products = defaultProducts, pageSize = 3, 
                             <button
                               type="button"
                               className={`ml-1 inline-flex items-center justify-center rounded-full border h-11 w-11 p-0 text-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 ${isFavorited(p.id) ? 'bg-red-600 text-white border-red-700' : 'border border-slate-300 text-slate-600 hover:text-slate-800 hover:border-slate-400 bg-stone-200/70 hover:bg-stone-200'}`}
-                              title="Favoritar"
-                              aria-label="Favoritar"
+                              title={isFavorited(p.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                              aria-label={isFavorited(p.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                              aria-pressed={!!isFavorited(p.id)}
                               onClick={() => toggleFavorite(p)}
+                              onFocus={() => safeAnnounce(favTextFocus)}
+                              onMouseEnter={() => safeAnnounce(favTextHover)}
+                              onBlur={() => { /* noop - diminui ruído se necessário */ }}
                             >
+                              <span className="sr-only">{isFavorited(p.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}</span>
                               {isFavorited(p.id) ? '♥' : '♡'}
                             </button>
                           </div>

@@ -13,11 +13,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://127.0.0.1:8080',
         changeOrigin: true,
         secure: false,
       },
     },
+  },
+  // When using `vite preview` for quick checks, bind it to the same one-port origin
+  // so we don't introduce multi-port confusion during audits.
+  preview: {
+    host: '127.0.0.1',
+    port: 8080,
+    strictPort: true,
   },
   test: {
     environment: 'jsdom',

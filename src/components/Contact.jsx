@@ -130,14 +130,12 @@ export default function Contact() {
               <p><strong>E-mail:</strong> sac@fullstack.com.br</p>
               <p><strong>Endereço:</strong> Av. Orlando Gomes, 1845 - Piatã, Salvador - BA, 41650-010</p>
             </div>
-            <iframe
+            <img
               className="rounded-lg mt-3 w-full"
-              src="https://www.google.com/maps?q=Senai%20CIMATEC%2C%20Av.%20Orlando%20Gomes%2C%201845%20-%20Piat%C3%A3%2C%20Salvador%20-%20BA&z=16&output=embed"
+              src="/assets/img/enderecocimatec/enderecocimatec.png"
               height="320"
-              allowFullScreen
+              alt="Mapa CIMATEC"
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Mapa CIMATEC"
             />
             <div className="mt-2">
               <a

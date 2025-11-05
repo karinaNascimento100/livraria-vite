@@ -16,15 +16,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "eslint . --ext .js,.jsx --max-warnings=0",
-    "lint:fix": "eslint . --ext .js,.jsx --fix",
-    "format": "prettier . --check",
-    "format:write": "prettier . --write"
+  "build": "vite build",
+  "serve": "node server/index.js",
+  "start": "npm run serve"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.2",
@@ -40,7 +34,9 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react-swc": "^4.1.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",

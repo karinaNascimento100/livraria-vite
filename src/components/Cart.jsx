@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { announce } from './LiveAnnouncer'
 import { Link } from 'react-router-dom'
 
 export default function Cart() {
@@ -8,6 +9,12 @@ export default function Cart() {
 
   const remove = id => dispatch({ type: 'REMOVE_FROM_CART', payload: { id } })
   const dec = id => dispatch({ type: 'DECREMENT_QTY', payload: { id } })
+  const addOne = (item) => {
+    dispatch({ type: 'ADD_TO_CART', payload: item })
+    try {
+      announce(`${item.name || 'Item'} adicionado ao carrinho`)
+    } catch { /* noop */ }
+  }
   const toBRL = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
   const total = cart.reduce((acc, i) => acc + i.price * (i.qty || 1), 0)
   const subtotal = total
@@ -122,7 +129,7 @@ export default function Cart() {
                         <button
                           type="button"
                           className="text-lg leading-none text-slate-600 hover:text-slate-900"
-                          onClick={() => dispatch({ type: 'ADD_TO_CART', payload: item })}
+                          onClick={() => addOne(item)}
                           aria-label="Aumentar quantidade"
                         >
                           +

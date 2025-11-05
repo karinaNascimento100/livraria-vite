@@ -1,5 +1,5 @@
-Place book cover images here and update src/components/ProductList.jsx paths if filenames differ.
-Suggested filenames:
+Coloque as imagens das capas dos livros nesta pasta e, se necessário, atualize os caminhos em `src/components/ProductList.jsx` caso os nomes dos arquivos sejam diferentes.
+Nomes sugeridos de arquivos (apenas exemplo):
 - html-css-duckett.jpg
 - front-end-curso.jpg
 - js-jquery-duckett.jpg

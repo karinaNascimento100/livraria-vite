@@ -40,8 +40,10 @@ No PowerShell (Windows):
 git clone https://github.com/karinaNascimento100/livraria-vite.git
 cd livraria-vite
 npm install
-npm run dev
-# abra http://localhost:5173 (ou a porta que o Vite indicar)
+# Build de produção e iniciar o servidor que serve os arquivos estáticos (dist/)
+npm run build
+npm start    # ou: npm run build && npm start
+# abra http://127.0.0.1:8080
 ```
 
 Observação: o Vite pode escolher uma porta alternativa se a padrão já estiver em uso — verifique a saída do terminal.
@@ -81,7 +83,7 @@ npm test        # executa testes (se existirem)
 
 - Para produção, considere mover persistência para backend ou usar estratégia de sincronização autenticada.
 - Adicionar toasts/confirmations melhora a usabilidade ao mover favoritos para o carrinho.
-- Revisar acessibilidade: use Lighthouse e leitores de tela para validar melhorias.
+- Revisar acessibilidade: use leitores de tela e testes manuais para validar melhorias.
 
 ---
 

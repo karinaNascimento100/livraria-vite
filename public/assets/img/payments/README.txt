@@ -1,11 +1,10 @@
-Place payment method logos here as PNG files:
-- visa.png
-- mastercard.png
-- amex.png
-- bradesco.png
-- elo.png
-- hipercard.png
+Coloque aqui os ícones/logotipos dos métodos de pagamento (formatos sugeridos: PNG/GIF):
+- visa.gif
+- mastercard.gif
+- amex.gif
+- diners.gif
+- hipercard.gif
 - boleto.png
 - pix.png
 
-You can replace these files with your own brand-compliant images.
+Você pode substituir estes arquivos por imagens que sigam a identidade visual da sua loja.
